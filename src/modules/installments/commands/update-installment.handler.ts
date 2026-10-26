@@ -1,19 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { UpdateInstallmentCommand } from '@/modules/installments/commands/update-installment.command';
-import { InstallmentsService } from '@/modules/installments/installments.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
-import { InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
+import { UpdateInstallmentCommand } from 'src/modules/installments/commands/update-installment.command';
+import { InstallmentsService } from 'src/modules/installments/installments.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
+import { InstallmentResponseDto } from 'src/modules/installments/dto/installment.dto';
 
 @CommandHandler(UpdateInstallmentCommand)
-export class UpdateInstallmentHandler implements ICommandHandler<UpdateInstallmentCommand, InstallmentResponseDto> {
+export class UpdateInstallmentHandler implements ICommandHandler<
+  UpdateInstallmentCommand,
+  InstallmentResponseDto
+> {
   constructor(
     private readonly installmentsService: InstallmentsService,
     private readonly logger: AppLoggerService,
   ) {}
 
-  async execute(cmd: UpdateInstallmentCommand): Promise<InstallmentResponseDto> {
+  async execute(
+    cmd: UpdateInstallmentCommand,
+  ): Promise<InstallmentResponseDto> {
     const inst = await this.installmentsService.update(cmd.id, cmd.dto);
     await this.logger.log({
       action: LogAction.UPDATE,

@@ -1,11 +1,14 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetSaleByIdQuery } from '@/modules/sales/queries/get-sale-by-id.query';
-import { SalesService } from '@/modules/sales/sales.service';
-import { SaleResponseDto } from '@/modules/sales/dto/sale.dto';
+import { GetSaleByIdQuery } from 'src/modules/sales/queries/get-sale-by-id.query';
+import { SalesService } from 'src/modules/sales/sales.service';
+import { SaleResponseDto } from 'src/modules/sales/dto/sale.dto';
 
 @QueryHandler(GetSaleByIdQuery)
-export class GetSaleByIdHandler implements IQueryHandler<GetSaleByIdQuery, SaleResponseDto> {
+export class GetSaleByIdHandler implements IQueryHandler<
+  GetSaleByIdQuery,
+  SaleResponseDto
+> {
   constructor(private readonly salesService: SalesService) {}
 
   async execute(query: GetSaleByIdQuery): Promise<SaleResponseDto> {

@@ -4,23 +4,23 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CqrsModule } from '@nestjs/cqrs';
-import { APP_CQRS } from '@/app.cqrs';
 import { join } from 'path';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthModule } from '@/modules/auth/auth.module';
-import { UsersModule } from '@/modules/users/users.module';
-import { CustomersModule } from '@/modules/customers/customers.module';
-import { SalesModule } from '@/modules/sales/sales.module';
-import { InstallmentsModule } from '@/modules/installments/installments.module';
-import { PaymentsModule } from '@/modules/payments/payments.module';
-import { FilesModule } from '@/modules/files/files.module';
-import { StoreInfoModule } from '@/modules/store-info/store-info.module';
-import { DashboardModule } from '@/modules/dashboard/dashboard.module';
-import { ReportsModule } from '@/modules/reports/reports.module';
-import { InvoicesModule } from '@/modules/invoices/invoices.module';
-import { LogsModule } from '@/modules/logs/logs.module';
-import { LoggerModule } from '@/common/utils/logger.module';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { AuthModule } from 'src/modules/auth/auth.module';
+import { UsersModule } from 'src/modules/users/users.module';
+import { CustomersModule } from 'src/modules/customers/customers.module';
+import { SalesModule } from 'src/modules/sales/sales.module';
+import { InstallmentsModule } from 'src/modules/installments/installments.module';
+import { PaymentsModule } from 'src/modules/payments/payments.module';
+import { FilesModule } from 'src/modules/files/files.module';
+import { StoreInfoModule } from 'src/modules/store-info/store-info.module';
+import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
+import { ReportsModule } from 'src/modules/reports/reports.module';
+import { InvoicesModule } from 'src/modules/invoices/invoices.module';
+import { LogsModule } from 'src/modules/logs/logs.module';
+import { LoggerModule } from 'src/common/utils/logger.module';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { APP_CQRS } from './app.cqrs';
 
 const globalGuards: Provider[] = [
   {

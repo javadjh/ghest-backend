@@ -1,13 +1,16 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { UpdateUserCommand } from '@/modules/users/commands/update-user.command';
-import { UsersService } from '@/modules/users/users.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
-import { UserResponseDto } from '@/modules/users/dto/user-response.dto';
+import { UpdateUserCommand } from 'src/modules/users/commands/update-user.command';
+import { UsersService } from 'src/modules/users/users.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
+import { UserResponseDto } from 'src/modules/users/dto/user-response.dto';
 
 @CommandHandler(UpdateUserCommand)
-export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand, UserResponseDto> {
+export class UpdateUserHandler implements ICommandHandler<
+  UpdateUserCommand,
+  UserResponseDto
+> {
   constructor(
     private readonly usersService: UsersService,
     private readonly logger: AppLoggerService,

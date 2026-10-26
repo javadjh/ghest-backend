@@ -1,15 +1,21 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { LoginDto } from '@/modules/auth/dto/login.dto';
-import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto';
-import { LoginCommand } from '@/modules/auth/commands/login.command';
-import { GetCurrentUserQuery } from '@/modules/auth/queries/get-current-user.query';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { Public } from '@/common/decorators/public.decorator';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
+import { LoginDto } from './dto/login.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { LoginCommand } from './commands/login.command';
+import { ApiAuth } from 'src/common/decorators/api-auth.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { GetCurrentUserQuery } from './queries/get-current-user.query';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @ApiTags('احراز هویت')
 @Controller('auth')
@@ -27,7 +33,11 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'نام کاربری یا رمز نادرست' })
   async login(@Body() dto: LoginDto, @Req() req: Request) {
     return this.commandBus.execute(
-      new LoginCommand(dto.username, dto.password, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new LoginCommand(
+        dto.username,
+        dto.password,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 

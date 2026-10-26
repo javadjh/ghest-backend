@@ -1,11 +1,14 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetPaymentByIdQuery } from '@/modules/payments/queries/get-payment-by-id.query';
-import { PaymentsService } from '@/modules/payments/payments.service';
-import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
+import { GetPaymentByIdQuery } from 'src/modules/payments/queries/get-payment-by-id.query';
+import { PaymentsService } from 'src/modules/payments/payments.service';
+import { PaymentResponseDto } from 'src/modules/payments/dto/payment.dto';
 
 @QueryHandler(GetPaymentByIdQuery)
-export class GetPaymentByIdHandler implements IQueryHandler<GetPaymentByIdQuery, PaymentResponseDto> {
+export class GetPaymentByIdHandler implements IQueryHandler<
+  GetPaymentByIdQuery,
+  PaymentResponseDto
+> {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   async execute(query: GetPaymentByIdQuery): Promise<PaymentResponseDto> {
@@ -23,7 +26,9 @@ export class GetPaymentByIdHandler implements IQueryHandler<GetPaymentByIdQuery,
       receiptFileId: p.receiptFileId?.toString?.() || null,
       receiptFileName: p.receiptFileName,
       receiptOriginalName: (p as any).receiptOriginalName || p.receiptFileName,
-      receiptUrl: p.receiptFileName ? `/uploads/${p.receiptFileName}` : undefined,
+      receiptUrl: p.receiptFileName
+        ? `/uploads/${p.receiptFileName}`
+        : undefined,
       notes: p.notes,
       createdBy: p.createdBy?.toString?.() || p.createdBy,
       createdAt: p.createdAt,

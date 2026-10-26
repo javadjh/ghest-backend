@@ -13,10 +13,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { ApiAuth } from '@/common/decorators/api-auth.decorator';
-import { FilesService } from '@/modules/files/files.service';
-import { FileResponseDto } from '@/modules/files/dto/file.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { ApiAuth } from 'src/common/decorators/api-auth.decorator';
+import { FilesService } from 'src/modules/files/files.service';
+import { FileResponseDto } from 'src/modules/files/dto/file.dto';
 
 @ApiTags('فایل‌ها')
 @ApiAuth()
@@ -33,7 +33,10 @@ export class FilesController {
       limits: { fileSize: 10 * 1024 * 1024 },
     }),
   )
-  async upload(@Req() req: any, @Req() request: Request): Promise<FileResponseDto> {
+  async upload(
+    @Req() req: any,
+    @Req() request: Request,
+  ): Promise<FileResponseDto> {
     if (!req.file) throw new BadRequestException('فایل ارسال نشده است');
     const userId = req.user?.sub || '000000000000000000000000';
     const file = await this.filesService.save(req.file, userId);
@@ -68,7 +71,10 @@ export class FilesController {
   async download(@Param('id') id: string, @Res() res: Response) {
     const file = await this.filesService.getById(id);
     res.setHeader('Content-Type', file.mimeType);
-    res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(file.originalName)}"`);
+    res.setHeader(
+      'Content-Disposition',
+      `inline; filename="${encodeURIComponent(file.originalName)}"`,
+    );
     res.sendFile(file.path, { root: process.cwd() });
   }
 

@@ -1,16 +1,19 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { LoginCommand } from '@/modules/auth/commands/login.command';
-import { UsersService } from '@/modules/users/users.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
-import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto';
+import { LoginCommand } from './login.command';
+import { LoginResponseDto } from '../dto/login-response.dto';
+import { UsersService } from 'src/modules/users/users.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
 
 @CommandHandler(LoginCommand)
-export class LoginHandler implements ICommandHandler<LoginCommand, LoginResponseDto> {
+export class LoginHandler implements ICommandHandler<
+  LoginCommand,
+  LoginResponseDto
+> {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,

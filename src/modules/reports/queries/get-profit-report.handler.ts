@@ -2,22 +2,43 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PersianDate } from '@/common/utils/persian-date';
-import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { Payment, PaymentDocument } from '@/modules/payments/schemas/payment.schema';
-import { GetProfitReportQuery } from '@/modules/reports/queries/get-profit-report.query';
-import { ProfitByPeriodDto, ProfitByMonthItem } from '@/modules/reports/dto/report.dto';
+import { PersianDate } from 'src/common/utils/persian-date';
+import {
+  Sale,
+  SaleDocument,
+  SaleStatus,
+} from 'src/modules/sales/schemas/sale.schema';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import {
+  Payment,
+  PaymentDocument,
+} from 'src/modules/payments/schemas/payment.schema';
+import { GetProfitReportQuery } from 'src/modules/reports/queries/get-profit-report.query';
+import {
+  ProfitByPeriodDto,
+  ProfitByMonthItem,
+} from 'src/modules/reports/dto/report.dto';
 
 @QueryHandler(GetProfitReportQuery)
-export class GetProfitReportHandler implements IQueryHandler<GetProfitReportQuery, ProfitByPeriodDto & { items: ProfitByMonthItem[] }> {
+export class GetProfitReportHandler implements IQueryHandler<
+  GetProfitReportQuery,
+  ProfitByPeriodDto & { items: ProfitByMonthItem[] }
+> {
   constructor(
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
-    @InjectModel(Payment.name) private readonly paymentModel: Model<PaymentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Payment.name)
+    private readonly paymentModel: Model<PaymentDocument>,
   ) {}
 
-  async execute(query: GetProfitReportQuery): Promise<ProfitByPeriodDto & { items: ProfitByMonthItem[] }> {
+  async execute(
+    query: GetProfitReportQuery,
+  ): Promise<ProfitByPeriodDto & { items: ProfitByMonthItem[] }> {
     const start = query.startDate;
     const end = query.endDate;
 
@@ -30,8 +51,12 @@ export class GetProfitReportHandler implements IQueryHandler<GetProfitReportQuer
       .exec();
 
     const saleIds = sales.map((s) => s._id);
-    const installments = await this.installmentModel.find({ saleId: { $in: saleIds } }).exec();
-    const payments = await this.paymentModel.find({ saleId: { $in: saleIds } }).exec();
+    const installments = await this.installmentModel
+      .find({ saleId: { $in: saleIds } })
+      .exec();
+    const payments = await this.paymentModel
+      .find({ saleId: { $in: saleIds } })
+      .exec();
 
     const saleMap = new Map<string, any>();
     for (const s of sales) saleMap.set(s._id.toString(), s);
@@ -93,7 +118,8 @@ export class GetProfitReportHandler implements IQueryHandler<GetProfitReportQuer
           const ratio = i.paidAmount / sale.repaymentAmount;
           item.realizedProfit += sale.totalProfit * ratio;
         }
-        item.expectedProfit += sale.totalProfit * (i.expectedAmount / sale.repaymentAmount);
+        item.expectedProfit +=
+          sale.totalProfit * (i.expectedAmount / sale.repaymentAmount);
       }
     }
 

@@ -13,15 +13,19 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { ApiAuth } from '@/common/decorators/api-auth.decorator';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto } from '@/modules/customers/dto/customer.dto';
-import { CreateCustomerCommand } from '@/modules/customers/commands/create-customer.command';
-import { UpdateCustomerCommand } from '@/modules/customers/commands/update-customer.command';
-import { DeleteCustomerCommand } from '@/modules/customers/commands/delete-customer.command';
-import { ListCustomersQuery } from '@/modules/customers/queries/list-customers.query';
-import { GetCustomerByIdQuery } from '@/modules/customers/queries/get-customer-by-id.query';
+import { ApiAuth } from 'src/common/decorators/api-auth.decorator';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { ListCustomersQuery } from './queries/list-customers.query';
+import {
+  CreateCustomerDto,
+  CustomerResponseDto,
+  UpdateCustomerDto,
+} from './dto/customer.dto';
+import { GetCustomerByIdQuery } from './queries/get-customer-by-id.query';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { CreateCustomerCommand } from './commands/create-customer.command';
+import { UpdateCustomerCommand } from './commands/update-customer.command';
+import { DeleteCustomerCommand } from './commands/delete-customer.command';
 
 @ApiTags('مشتریان')
 @ApiAuth()
@@ -43,7 +47,9 @@ export class CustomersController {
     @Query('limit') limit = 20,
     @Query('search') search?: string,
   ) {
-    return this.queryBus.execute(new ListCustomersQuery(Number(page) || 1, Number(limit) || 20, search));
+    return this.queryBus.execute(
+      new ListCustomersQuery(Number(page) || 1, Number(limit) || 20, search),
+    );
   }
 
   @Get(':id')
@@ -61,7 +67,12 @@ export class CustomersController {
     @Req() req: Request,
   ): Promise<CustomerResponseDto> {
     return this.commandBus.execute(
-      new CreateCustomerCommand(dto, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new CreateCustomerCommand(
+        dto,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 
@@ -75,7 +86,13 @@ export class CustomersController {
     @Req() req: Request,
   ): Promise<CustomerResponseDto> {
     return this.commandBus.execute(
-      new UpdateCustomerCommand(id, dto, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new UpdateCustomerCommand(
+        id,
+        dto,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 
@@ -88,7 +105,12 @@ export class CustomersController {
     @Req() req: Request,
   ): Promise<void> {
     return this.commandBus.execute(
-      new DeleteCustomerCommand(id, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new DeleteCustomerCommand(
+        id,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 }

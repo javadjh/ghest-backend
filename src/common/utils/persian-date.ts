@@ -71,7 +71,9 @@ export class PersianDate {
    * Add N months to a Jalali date, returns Jalali string
    */
   static addMonths(jalali: string, months: number): string {
-    const d = dayjs(jalali, { jalali: true }).calendar('jalali').add(months, 'month');
+    const d = dayjs(jalali, { jalali: true })
+      .calendar('jalali')
+      .add(months, 'month');
     return d.format('YYYY/MM/DD');
   }
 

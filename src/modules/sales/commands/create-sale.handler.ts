@@ -1,14 +1,17 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { CreateSaleCommand } from '@/modules/sales/commands/create-sale.command';
-import { SalesService } from '@/modules/sales/sales.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
-import { SaleResponseDto } from '@/modules/sales/dto/sale.dto';
-import { PersianDate } from '@/common/utils/persian-date';
+import { CreateSaleCommand } from 'src/modules/sales/commands/create-sale.command';
+import { SalesService } from 'src/modules/sales/sales.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
+import { SaleResponseDto } from 'src/modules/sales/dto/sale.dto';
+import { PersianDate } from 'src/common/utils/persian-date';
 
 @CommandHandler(CreateSaleCommand)
-export class CreateSaleHandler implements ICommandHandler<CreateSaleCommand, SaleResponseDto> {
+export class CreateSaleHandler implements ICommandHandler<
+  CreateSaleCommand,
+  SaleResponseDto
+> {
   constructor(
     private readonly salesService: SalesService,
     private readonly logger: AppLoggerService,

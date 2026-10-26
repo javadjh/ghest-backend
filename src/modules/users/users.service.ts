@@ -1,9 +1,18 @@
-import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
-import { User, UserDocument, UserRole } from '@/modules/users/schemas/user.schema';
-import { CreateUserDto, UpdateUserDto } from '@/modules/users/dto/user.dto';
+import {
+  User,
+  UserDocument,
+  UserRole,
+} from 'src/modules/users/schemas/user.schema';
+import { CreateUserDto, UpdateUserDto } from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +21,9 @@ export class UsersService {
   ) {}
 
   async findByUsername(username: string): Promise<UserDocument | null> {
-    const u = await this.userModel.findOne({ username: username.trim() }).exec();
+    const u = await this.userModel
+      .findOne({ username: username.trim() })
+      .exec();
     return u || null;
   }
 
@@ -22,7 +33,9 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
-    const existing = await this.userModel.findOne({ username: dto.username.trim() }).exec();
+    const existing = await this.userModel
+      .findOne({ username: dto.username.trim() })
+      .exec();
     if (existing) {
       throw new ConflictException('این نام کاربری قبلاً ثبت شده است');
     }
@@ -92,16 +105,32 @@ export class UsersService {
 
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      this.userModel.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),
+      this.userModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.userModel.countDocuments(filter).exec(),
     ]);
     return { items, total };
   }
 
-  async ensureSeed(username: string, password: string, fullName: string, role: UserRole): Promise<UserDocument> {
+  async ensureSeed(
+    username: string,
+    password: string,
+    fullName: string,
+    role: UserRole,
+  ): Promise<UserDocument> {
     const existing = await this.userModel.findOne({ username }).exec();
     if (existing) return existing;
     const hashed = await bcrypt.hash(password, 10);
-    return this.userModel.create({ username, password: hashed, fullName, role, isActive: true });
+    return this.userModel.create({
+      username,
+      password: hashed,
+      fullName,
+      role,
+      isActive: true,
+    });
   }
 }

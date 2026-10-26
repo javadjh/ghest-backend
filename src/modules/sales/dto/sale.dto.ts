@@ -12,7 +12,10 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { GuaranteeType, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import {
+  GuaranteeType,
+  SaleStatus,
+} from 'src/modules/sales/schemas/sale.schema';
 
 export class GuaranteeDto {
   @ApiProperty({ enum: GuaranteeType, example: GuaranteeType.CHEQUE })
@@ -34,7 +37,10 @@ export class GuaranteeDto {
   @IsOptional()
   chequeBank?: string;
 
-  @ApiProperty({ required: false, description: 'تاریخ چک به سبک جلالی YYYY/MM/DD' })
+  @ApiProperty({
+    required: false,
+    description: 'تاریخ چک به سبک جلالی YYYY/MM/DD',
+  })
   @IsString()
   @IsOptional()
   chequeDate?: string;
@@ -75,12 +81,19 @@ export class CreateSaleDto {
   @IsOptional()
   imei?: string;
 
-  @ApiProperty({ example: '09123456789', required: false, description: 'شماره تماس مشتری روی این فروش' })
+  @ApiProperty({
+    example: '09123456789',
+    required: false,
+    description: 'شماره تماس مشتری روی این فروش',
+  })
   @IsString()
   @IsOptional()
   phoneCustomer?: string;
 
-  @ApiProperty({ example: '1404/09/16', description: 'تاریخ فروش به سبک جلالی YYYY/MM/DD' })
+  @ApiProperty({
+    example: '1404/09/16',
+    description: 'تاریخ فروش به سبک جلالی YYYY/MM/DD',
+  })
   @IsString()
   saleDate: string;
 
@@ -99,7 +112,10 @@ export class CreateSaleDto {
   @Min(0)
   downPayment: number;
 
-  @ApiProperty({ example: 10, description: 'تعداد اقساط (می‌تواند اعشاری باشد مثل ۱.۵)' })
+  @ApiProperty({
+    example: 10,
+    description: 'تعداد اقساط (می‌تواند اعشاری باشد مثل ۱.۵)',
+  })
   @IsNumber()
   @Min(0.1)
   installmentCount: number;
@@ -188,7 +204,7 @@ export class UpdateSaleDto {
 
 export class SaleResponseDto {
   id: string;
-  customerId: string;
+  customerId: any;
   customerName: string;
   phone: string;
   imei: string;
@@ -210,7 +226,7 @@ export class SaleResponseDto {
   guarantees: any[];
   status: SaleStatus;
   notes: string;
-  createdBy: string;
+  createdBy: any;
   totalPaid: number;
   remainingBalance: number;
   createdAt: Date;

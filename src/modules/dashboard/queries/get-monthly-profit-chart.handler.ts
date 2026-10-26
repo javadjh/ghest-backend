@@ -2,20 +2,29 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PersianDate } from '@/common/utils/persian-date';
-import { Installment, InstallmentDocument } from '@/modules/installments/schemas/installment.schema';
-import { Sale, SaleDocument } from '@/modules/sales/schemas/sale.schema';
-import { MonthlyProfitChartItem } from '@/modules/dashboard/dto/dashboard.dto';
-import { GetMonthlyProfitChartQuery } from '@/modules/dashboard/queries/get-monthly-profit-chart.query';
+import { Sale, SaleDocument } from 'src/modules/sales/schemas/sale.schema';
+import { MonthlyProfitChartItem } from 'src/modules/dashboard/dto/dashboard.dto';
+import { GetMonthlyProfitChartQuery } from 'src/modules/dashboard/queries/get-monthly-profit-chart.query';
+import { PersianDate } from 'src/common/utils/persian-date';
+import {
+  Installment,
+  InstallmentDocument,
+} from 'src/modules/installments/schemas/installment.schema';
 
 @QueryHandler(GetMonthlyProfitChartQuery)
-export class GetMonthlyProfitChartHandler implements IQueryHandler<GetMonthlyProfitChartQuery, MonthlyProfitChartItem[]> {
+export class GetMonthlyProfitChartHandler implements IQueryHandler<
+  GetMonthlyProfitChartQuery,
+  MonthlyProfitChartItem[]
+> {
   constructor(
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
   ) {}
 
-  async execute(query: GetMonthlyProfitChartQuery): Promise<MonthlyProfitChartItem[]> {
+  async execute(
+    query: GetMonthlyProfitChartQuery,
+  ): Promise<MonthlyProfitChartItem[]> {
     const today = PersianDate.now();
     const monthsBack = Math.min(Math.max(query.monthsBack, 1), 24);
 
@@ -36,7 +45,9 @@ export class GetMonthlyProfitChartHandler implements IQueryHandler<GetMonthlyPro
       monthKeys.push({ key, label });
     }
 
-    const all = await this.installmentModel.find({ monthKey: { $in: monthKeys.map((m) => m.key) } }).exec();
+    const all = await this.installmentModel
+      .find({ monthKey: { $in: monthKeys.map((m) => m.key) } })
+      .exec();
     const sales = await this.saleModel.find({}).exec();
     const saleMap = new Map<string, any>();
     for (const s of sales) saleMap.set(s._id.toString(), s);

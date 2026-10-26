@@ -2,34 +2,58 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { PersianDate } from '@/common/utils/persian-date';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
-import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
-import { GetCustomerDebtReportQuery } from '@/modules/reports/queries/get-customer-debt-report.query';
-import { CustomerDebtDto } from '@/modules/reports/dto/report.dto';
+import { PersianDate } from 'src/common/utils/persian-date';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import {
+  Sale,
+  SaleDocument,
+  SaleStatus,
+} from 'src/modules/sales/schemas/sale.schema';
+import {
+  Customer,
+  CustomerDocument,
+} from 'src/modules/customers/schemas/customer.schema';
+import { GetCustomerDebtReportQuery } from 'src/modules/reports/queries/get-customer-debt-report.query';
+import { CustomerDebtDto } from 'src/modules/reports/dto/report.dto';
 
 @QueryHandler(GetCustomerDebtReportQuery)
-export class GetCustomerDebtReportHandler implements IQueryHandler<GetCustomerDebtReportQuery, CustomerDebtDto[]> {
+export class GetCustomerDebtReportHandler implements IQueryHandler<
+  GetCustomerDebtReportQuery,
+  CustomerDebtDto[]
+> {
   constructor(
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
-    @InjectModel(Customer.name) private readonly customerModel: Model<CustomerDocument>,
+    @InjectModel(Customer.name)
+    private readonly customerModel: Model<CustomerDocument>,
   ) {}
 
   async execute(query: GetCustomerDebtReportQuery): Promise<CustomerDebtDto[]> {
     const today = PersianDate.now();
     const sales = query.customerId
-      ? await this.saleModel.find({ customerId: new Types.ObjectId(query.customerId) }).exec()
-      : await this.saleModel.find({ status: { $ne: SaleStatus.CANCELLED } }).exec();
+      ? await this.saleModel
+          .find({ customerId: new Types.ObjectId(query.customerId) })
+          .exec()
+      : await this.saleModel
+          .find({ status: { $ne: SaleStatus.CANCELLED } })
+          .exec();
 
     const customerIds = [...new Set(sales.map((s) => s.customerId.toString()))];
-    const customers = await this.customerModel.find({ _id: { $in: customerIds } }).exec();
+    const customers = await this.customerModel
+      .find({ _id: { $in: customerIds } })
+      .exec();
     const customerMap = new Map<string, any>();
     for (const c of customers) customerMap.set(c._id.toString(), c);
 
     const installmentSales = sales.map((s) => s._id);
-    const installments = await this.installmentModel.find({ saleId: { $in: installmentSales } }).exec();
+    const installments = await this.installmentModel
+      .find({ saleId: { $in: installmentSales } })
+      .exec();
 
     // Build per-customer aggregate
     const map = new Map<string, any>();
@@ -63,7 +87,10 @@ export class GetCustomerDebtReportHandler implements IQueryHandler<GetCustomerDe
       const item = map.get(cid);
       if (!item) continue;
       item.installmentsCount += 1;
-      if (i.status !== InstallmentStatus.PAID && i.status !== InstallmentStatus.CANCELLED) {
+      if (
+        i.status !== InstallmentStatus.PAID &&
+        i.status !== InstallmentStatus.CANCELLED
+      ) {
         if (i.dueDate < today) {
           item.overdueInstallments += 1;
           item.overdueAmount += Math.max(0, i.expectedAmount - i.paidAmount);
@@ -71,6 +98,8 @@ export class GetCustomerDebtReportHandler implements IQueryHandler<GetCustomerDe
       }
     }
 
-    return Array.from(map.values()).sort((a, b) => b.totalRemaining - a.totalRemaining);
+    return Array.from(map.values()).sort(
+      (a, b) => b.totalRemaining - a.totalRemaining,
+    );
   }
 }

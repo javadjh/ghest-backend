@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, IsNumber, Min } from 'class-validator';
-import { InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { InstallmentStatus } from 'src/modules/installments/schemas/installment.schema';
 
 export class InstallmentResponseDto {
   id: string;
@@ -53,7 +53,10 @@ export class ListInstallmentsDto {
   @IsString()
   year?: string;
 
-  @ApiProperty({ required: false, description: 'نام ماه فارسی (مهر، آبان و...)' })
+  @ApiProperty({
+    required: false,
+    description: 'نام ماه فارسی (مهر، آبان و...)',
+  })
   @IsOptional()
   @IsString()
   monthName?: string;

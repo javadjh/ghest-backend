@@ -1,16 +1,33 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { ListInstallmentsQuery } from '@/modules/installments/queries/list-installments.query';
-import { InstallmentsService } from '@/modules/installments/installments.service';
-import { PersianDate } from '@/common/utils/persian-date';
-import { InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
+import { ListInstallmentsQuery } from 'src/modules/installments/queries/list-installments.query';
+import { InstallmentsService } from 'src/modules/installments/installments.service';
+import { PersianDate } from 'src/common/utils/persian-date';
+import { InstallmentResponseDto } from 'src/modules/installments/dto/installment.dto';
 
 @QueryHandler(ListInstallmentsQuery)
-export class ListInstallmentsHandler implements IQueryHandler<ListInstallmentsQuery, { items: InstallmentResponseDto[]; total: number; page: number; limit: number }> {
+export class ListInstallmentsHandler implements IQueryHandler<
+  ListInstallmentsQuery,
+  {
+    items: InstallmentResponseDto[];
+    total: number;
+    page: number;
+    limit: number;
+  }
+> {
   constructor(private readonly installmentsService: InstallmentsService) {}
 
-  async execute(query: ListInstallmentsQuery): Promise<{ items: InstallmentResponseDto[]; total: number; page: number; limit: number }> {
-    const { items, total } = await this.installmentsService.list(query.page, query.limit, query.filters);
+  async execute(query: ListInstallmentsQuery): Promise<{
+    items: InstallmentResponseDto[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const { items, total } = await this.installmentsService.list(
+      query.page,
+      query.limit,
+      query.filters,
+    );
     return {
       items: items.map((i) => ({
         id: (i._id as any).toString(),

@@ -2,20 +2,30 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PersianDate } from '@/common/utils/persian-date';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { Sale, SaleDocument } from '@/modules/sales/schemas/sale.schema';
-import { GetMonthlyInstallmentsQuery } from '@/modules/reports/queries/get-monthly-installments.query';
-import { MonthlyInstallmentsListDto } from '@/modules/reports/dto/report.dto';
+import { PersianDate } from 'src/common/utils/persian-date';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import { Sale, SaleDocument } from 'src/modules/sales/schemas/sale.schema';
+import { GetMonthlyInstallmentsQuery } from 'src/modules/reports/queries/get-monthly-installments.query';
+import { MonthlyInstallmentsListDto } from 'src/modules/reports/dto/report.dto';
 
 @QueryHandler(GetMonthlyInstallmentsQuery)
-export class GetMonthlyInstallmentsHandler implements IQueryHandler<GetMonthlyInstallmentsQuery, MonthlyInstallmentsListDto[]> {
+export class GetMonthlyInstallmentsHandler implements IQueryHandler<
+  GetMonthlyInstallmentsQuery,
+  MonthlyInstallmentsListDto[]
+> {
   constructor(
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
   ) {}
 
-  async execute(query: GetMonthlyInstallmentsQuery): Promise<MonthlyInstallmentsListDto[]> {
+  async execute(
+    query: GetMonthlyInstallmentsQuery,
+  ): Promise<MonthlyInstallmentsListDto[]> {
     const monthKey = query.monthKey || PersianDate.currentMonthKey();
     const installments = await this.installmentModel
       .find({ monthKey })
@@ -31,7 +41,10 @@ export class GetMonthlyInstallmentsHandler implements IQueryHandler<GetMonthlyIn
 
     return installments.map((i) => {
       let lateDays = 0;
-      if (i.status !== InstallmentStatus.PAID && i.status !== InstallmentStatus.CANCELLED) {
+      if (
+        i.status !== InstallmentStatus.PAID &&
+        i.status !== InstallmentStatus.CANCELLED
+      ) {
         const days = PersianDate.daysBetween(i.dueDate, today);
         lateDays = days > 0 ? days : 0;
       }

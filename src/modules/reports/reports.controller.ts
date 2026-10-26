@@ -1,14 +1,14 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { ApiAuth } from '@/common/decorators/api-auth.decorator';
-import { GetProfitReportQuery } from '@/modules/reports/queries/get-profit-report.query';
-import { GetMonthlyInstallmentsQuery } from '@/modules/reports/queries/get-monthly-installments.query';
-import { GetCustomerDebtReportQuery } from '@/modules/reports/queries/get-customer-debt-report.query';
-import { GetOverdueInstallmentsReportQuery } from '@/modules/reports/queries/get-overdue-installments-report.query';
-import { GetRealizedProfitPerSaleQuery } from '@/modules/reports/queries/get-realized-profit-per-sale.query';
-import { PersianDate } from '@/common/utils/persian-date';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { ApiAuth } from 'src/common/decorators/api-auth.decorator';
+import { GetProfitReportQuery } from 'src/modules/reports/queries/get-profit-report.query';
+import { GetMonthlyInstallmentsQuery } from 'src/modules/reports/queries/get-monthly-installments.query';
+import { GetCustomerDebtReportQuery } from 'src/modules/reports/queries/get-customer-debt-report.query';
+import { GetOverdueInstallmentsReportQuery } from 'src/modules/reports/queries/get-overdue-installments-report.query';
+import { GetRealizedProfitPerSaleQuery } from 'src/modules/reports/queries/get-realized-profit-per-sale.query';
+import { PersianDate } from 'src/common/utils/persian-date';
 
 @ApiTags('گزارش‌ها')
 @ApiAuth()
@@ -19,20 +19,38 @@ export class ReportsController {
 
   @Get('profit')
   @ApiOperation({ summary: 'گزارش سود در بازه زمانی (روزانه/ماهانه/سالانه)' })
-  @ApiQuery({ name: 'startDate', required: true, description: 'تاریخ شروع جلالی YYYY/MM/DD' })
-  @ApiQuery({ name: 'endDate', required: true, description: 'تاریخ پایان جلالی YYYY/MM/DD' })
-  @ApiQuery({ name: 'period', required: false, enum: ['daily', 'monthly', 'yearly'] })
+  @ApiQuery({
+    name: 'startDate',
+    required: true,
+    description: 'تاریخ شروع جلالی YYYY/MM/DD',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: true,
+    description: 'تاریخ پایان جلالی YYYY/MM/DD',
+  })
+  @ApiQuery({
+    name: 'period',
+    required: false,
+    enum: ['daily', 'monthly', 'yearly'],
+  })
   async profit(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
     @Query('period') period: 'daily' | 'monthly' | 'yearly' = 'monthly',
   ) {
-    return this.queryBus.execute(new GetProfitReportQuery(startDate, endDate, period));
+    return this.queryBus.execute(
+      new GetProfitReportQuery(startDate, endDate, period),
+    );
   }
 
   @Get('monthly-installments')
   @ApiOperation({ summary: 'لیست اقساط یک ماه خاص (مهر/آبان/...)' })
-  @ApiQuery({ name: 'monthKey', required: false, description: 'کلید ماه YYYY/MM (پیش‌فرض ماه جاری)' })
+  @ApiQuery({
+    name: 'monthKey',
+    required: false,
+    description: 'کلید ماه YYYY/MM (پیش‌فرض ماه جاری)',
+  })
   async monthly(@Query('monthKey') monthKey?: string) {
     return this.queryBus.execute(new GetMonthlyInstallmentsQuery(monthKey));
   }
@@ -59,6 +77,9 @@ export class ReportsController {
   @Get('current-month-key')
   @ApiOperation({ summary: 'دریافت کلید ماه جاری' })
   currentMonthKey() {
-    return { monthKey: PersianDate.currentMonthKey(), monthLabel: PersianDate.monthLabel(PersianDate.now()) };
+    return {
+      monthKey: PersianDate.currentMonthKey(),
+      monthLabel: PersianDate.monthLabel(PersianDate.now()),
+    };
   }
 }

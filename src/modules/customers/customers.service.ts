@@ -1,13 +1,18 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
-import { CreateCustomerDto, UpdateCustomerDto } from '@/modules/customers/dto/customer.dto';
+import { Customer, CustomerDocument } from './schemas/customer.schema';
+import { CreateCustomerDto, UpdateCustomerDto } from './dto/customer.dto';
 
 @Injectable()
 export class CustomersService {
   constructor(
-    @InjectModel(Customer.name) private readonly customerModel: Model<CustomerDocument>,
+    @InjectModel(Customer.name)
+    private readonly customerModel: Model<CustomerDocument>,
   ) {}
 
   async create(dto: CreateCustomerDto): Promise<CustomerDocument> {
@@ -59,13 +64,20 @@ export class CustomersService {
     }
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      this.customerModel.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),
+      this.customerModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.customerModel.countDocuments(filter).exec(),
     ]);
     return { items, total };
   }
 
   async updateTotalPurchases(id: string, increment: number): Promise<void> {
-    await this.customerModel.updateOne({ _id: id }, { $inc: { totalPurchases: increment } }).exec();
+    await this.customerModel
+      .updateOne({ _id: id }, { $inc: { totalPurchases: increment } })
+      .exec();
   }
 }

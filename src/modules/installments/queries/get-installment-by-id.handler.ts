@@ -1,14 +1,19 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetInstallmentByIdQuery } from '@/modules/installments/queries/get-installment-by-id.query';
-import { InstallmentsService } from '@/modules/installments/installments.service';
-import { InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
+import { GetInstallmentByIdQuery } from 'src/modules/installments/queries/get-installment-by-id.query';
+import { InstallmentsService } from 'src/modules/installments/installments.service';
+import { InstallmentResponseDto } from 'src/modules/installments/dto/installment.dto';
 
 @QueryHandler(GetInstallmentByIdQuery)
-export class GetInstallmentByIdHandler implements IQueryHandler<GetInstallmentByIdQuery, InstallmentResponseDto> {
+export class GetInstallmentByIdHandler implements IQueryHandler<
+  GetInstallmentByIdQuery,
+  InstallmentResponseDto
+> {
   constructor(private readonly installmentsService: InstallmentsService) {}
 
-  async execute(query: GetInstallmentByIdQuery): Promise<InstallmentResponseDto> {
+  async execute(
+    query: GetInstallmentByIdQuery,
+  ): Promise<InstallmentResponseDto> {
     const i = await this.installmentsService.findById(query.id);
     if (!i) throw new NotFoundException('قسط یافت نشد');
     return {

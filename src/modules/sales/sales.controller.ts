@@ -13,15 +13,19 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { ApiAuth } from '@/common/decorators/api-auth.decorator';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { CreateSaleDto, UpdateSaleDto, SaleResponseDto } from '@/modules/sales/dto/sale.dto';
-import { CreateSaleCommand } from '@/modules/sales/commands/create-sale.command';
-import { UpdateSaleCommand } from '@/modules/sales/commands/update-sale.command';
-import { DeleteSaleCommand } from '@/modules/sales/commands/delete-sale.command';
-import { ListSalesQuery } from '@/modules/sales/queries/list-sales.query';
-import { GetSaleByIdQuery } from '@/modules/sales/queries/get-sale-by-id.query';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { ApiAuth } from 'src/common/decorators/api-auth.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import {
+  CreateSaleDto,
+  UpdateSaleDto,
+  SaleResponseDto,
+} from 'src/modules/sales/dto/sale.dto';
+import { CreateSaleCommand } from 'src/modules/sales/commands/create-sale.command';
+import { UpdateSaleCommand } from 'src/modules/sales/commands/update-sale.command';
+import { DeleteSaleCommand } from 'src/modules/sales/commands/delete-sale.command';
+import { ListSalesQuery } from 'src/modules/sales/queries/list-sales.query';
+import { GetSaleByIdQuery } from 'src/modules/sales/queries/get-sale-by-id.query';
 
 @ApiTags('فروش‌ها')
 @ApiAuth()
@@ -80,7 +84,12 @@ export class SalesController {
     @Req() req: Request,
   ): Promise<SaleResponseDto> {
     return this.commandBus.execute(
-      new CreateSaleCommand(dto, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new CreateSaleCommand(
+        dto,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 
@@ -94,12 +103,20 @@ export class SalesController {
     @Req() req: Request,
   ): Promise<SaleResponseDto> {
     return this.commandBus.execute(
-      new UpdateSaleCommand(id, dto, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new UpdateSaleCommand(
+        id,
+        dto,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'حذف فروش (اقساط و پرداختی‌های مربوطه نیز حذف می‌شوند)' })
+  @ApiOperation({
+    summary: 'حذف فروش (اقساط و پرداختی‌های مربوطه نیز حذف می‌شوند)',
+  })
   async delete(
     @Param('id') id: string,
     @CurrentUser('sub') actorId: string,
@@ -107,7 +124,12 @@ export class SalesController {
     @Req() req: Request,
   ): Promise<void> {
     return this.commandBus.execute(
-      new DeleteSaleCommand(id, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new DeleteSaleCommand(
+        id,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 }

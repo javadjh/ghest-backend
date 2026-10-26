@@ -5,9 +5,9 @@ import { MulterModule } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import * as path from 'path';
 import { mkdirSync } from 'fs';
-import { FilesController } from '@/modules/files/files.controller';
-import { FilesService } from '@/modules/files/files.service';
-import { File, FileSchema } from '@/modules/files/schemas/file.schema';
+import { FilesController } from 'src/modules/files/files.controller';
+import { FilesService } from 'src/modules/files/files.service';
+import { File, FileSchema } from 'src/modules/files/schemas/file.schema';
 
 @Module({
   imports: [

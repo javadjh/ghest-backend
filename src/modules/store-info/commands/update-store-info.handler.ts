@@ -1,13 +1,16 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { UpdateStoreInfoCommand } from '@/modules/store-info/commands/update-store-info.command';
-import { StoreInfoService } from '@/modules/store-info/store-info.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
-import { StoreInfoResponseDto } from '@/modules/store-info/dto/store-info.dto';
+import { UpdateStoreInfoCommand } from 'src/modules/store-info/commands/update-store-info.command';
+import { StoreInfoService } from 'src/modules/store-info/store-info.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
+import { StoreInfoResponseDto } from 'src/modules/store-info/dto/store-info.dto';
 
 @CommandHandler(UpdateStoreInfoCommand)
-export class UpdateStoreInfoHandler implements ICommandHandler<UpdateStoreInfoCommand, StoreInfoResponseDto> {
+export class UpdateStoreInfoHandler implements ICommandHandler<
+  UpdateStoreInfoCommand,
+  StoreInfoResponseDto
+> {
   constructor(
     private readonly storeInfoService: StoreInfoService,
     private readonly logger: AppLoggerService,

@@ -2,20 +2,23 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
-import { SalesStatusChartItem } from '@/modules/dashboard/dto/dashboard.dto';
-import { GetSalesStatusChartQuery } from '@/modules/dashboard/queries/get-sales-status-chart.query';
+import { Sale, SaleDocument } from 'src/modules/sales/schemas/sale.schema';
+import { SalesStatusChartItem } from 'src/modules/dashboard/dto/dashboard.dto';
+import { GetSalesStatusChartQuery } from 'src/modules/dashboard/queries/get-sales-status-chart.query';
 
 @QueryHandler(GetSalesStatusChartQuery)
-export class GetSalesStatusChartHandler implements IQueryHandler<GetSalesStatusChartQuery, SalesStatusChartItem[]> {
+export class GetSalesStatusChartHandler implements IQueryHandler<
+  GetSalesStatusChartQuery,
+  SalesStatusChartItem[]
+> {
   constructor(
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
   ) {}
 
   async execute(): Promise<SalesStatusChartItem[]> {
-    const agg = await this.saleModel.aggregate([
-      { $group: { _id: '$status', count: { $sum: 1 } } },
-    ]).exec();
+    const agg = await this.saleModel
+      .aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }])
+      .exec();
     const map: Record<string, number> = {
       active: 0,
       completed: 0,

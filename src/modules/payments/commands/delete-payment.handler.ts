@@ -1,12 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { DeletePaymentCommand } from '@/modules/payments/commands/delete-payment.command';
-import { PaymentsService } from '@/modules/payments/payments.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
+import { DeletePaymentCommand } from 'src/modules/payments/commands/delete-payment.command';
+import { PaymentsService } from 'src/modules/payments/payments.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
 
 @CommandHandler(DeletePaymentCommand)
-export class DeletePaymentHandler implements ICommandHandler<DeletePaymentCommand, void> {
+export class DeletePaymentHandler implements ICommandHandler<
+  DeletePaymentCommand,
+  void
+> {
   constructor(
     private readonly paymentsService: PaymentsService,
     private readonly logger: AppLoggerService,

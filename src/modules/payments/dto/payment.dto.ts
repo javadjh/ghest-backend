@@ -45,7 +45,7 @@ export class PaymentResponseDto {
   receiptOriginalName?: string;
   receiptUrl?: string;
   notes: string;
-  createdBy: string;
+  createdBy: any;
   createdAt: Date;
   updatedAt: Date;
 }

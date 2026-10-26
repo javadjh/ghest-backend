@@ -1,15 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { PersianDate } from '@/common/utils/persian-date';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { UpdateInstallmentDto } from '@/modules/installments/dto/installment.dto';
-import { SalesService } from '@/modules/sales/sales.service';
+import { PersianDate } from 'src/common/utils/persian-date';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import { UpdateInstallmentDto } from 'src/modules/installments/dto/installment.dto';
+import { SalesService } from 'src/modules/sales/sales.service';
 
 @Injectable()
 export class InstallmentsService {
   constructor(
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
     private readonly salesService: SalesService,
   ) {}
 
@@ -20,7 +25,10 @@ export class InstallmentsService {
 
   async findBySale(saleId: string): Promise<InstallmentDocument[]> {
     if (!saleId || !Types.ObjectId.isValid(saleId)) return [];
-    return this.installmentModel.find({ saleId: new Types.ObjectId(saleId) }).sort({ installmentNumber: 1 }).exec();
+    return this.installmentModel
+      .find({ saleId: new Types.ObjectId(saleId) })
+      .sort({ installmentNumber: 1 })
+      .exec();
   }
 
   async list(
@@ -35,7 +43,8 @@ export class InstallmentsService {
       ];
     }
     if (filters.status) filter.status = filters.status;
-    if (filters.customerId) filter.customerId = new Types.ObjectId(filters.customerId);
+    if (filters.customerId)
+      filter.customerId = new Types.ObjectId(filters.customerId);
     if (filters.saleId) filter.saleId = new Types.ObjectId(filters.saleId);
     if (filters.monthKey) filter.monthKey = filters.monthKey;
     if (filters.year) {
@@ -54,7 +63,9 @@ export class InstallmentsService {
 
     const today = PersianDate.now();
     if (filters.overdue === 'true') {
-      filter.status = { $in: [InstallmentStatus.PENDING, InstallmentStatus.PARTIAL] };
+      filter.status = {
+        $in: [InstallmentStatus.PENDING, InstallmentStatus.PARTIAL],
+      };
       filter.dueDate = { $lt: today };
       if (filters.fromDate || filters.toDate) {
         // override
@@ -68,7 +79,12 @@ export class InstallmentsService {
 
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      this.installmentModel.find(filter).sort({ dueDate: 1 }).skip(skip).limit(limit).exec(),
+      this.installmentModel
+        .find(filter)
+        .sort({ dueDate: 1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.installmentModel.countDocuments(filter).exec(),
     ]);
 
@@ -81,14 +97,22 @@ export class InstallmentsService {
     let finalItems = items;
     if (filters.monthName) {
       const mn = filters.monthName;
-      finalItems = finalItems.filter((i) => PersianDate.monthNameFromDate(i.dueDate) === mn);
+      finalItems = finalItems.filter(
+        (i) => PersianDate.monthNameFromDate(i.dueDate) === mn,
+      );
     }
 
     return { items: finalItems, total };
   }
 
-  private updateLateDaysInPlace(installment: InstallmentDocument, today: string): void {
-    if (installment.status === InstallmentStatus.PAID || installment.status === InstallmentStatus.CANCELLED) {
+  private updateLateDaysInPlace(
+    installment: InstallmentDocument,
+    today: string,
+  ): void {
+    if (
+      installment.status === InstallmentStatus.PAID ||
+      installment.status === InstallmentStatus.CANCELLED
+    ) {
       installment.lateDays = 0;
       return;
     }
@@ -116,19 +140,27 @@ export class InstallmentsService {
     return { updated };
   }
 
-  async update(id: string, dto: UpdateInstallmentDto): Promise<InstallmentDocument> {
+  async update(
+    id: string,
+    dto: UpdateInstallmentDto,
+  ): Promise<InstallmentDocument> {
     const inst = await this.installmentModel.findById(id).exec();
     if (!inst) throw new NotFoundException('قسط یافت نشد');
     if (dto.notes !== undefined) inst.notes = dto.notes;
     if (dto.penaltyAmount !== undefined) inst.penaltyAmount = dto.penaltyAmount;
-    if (dto.expectedAmount !== undefined) inst.expectedAmount = dto.expectedAmount;
+    if (dto.expectedAmount !== undefined)
+      inst.expectedAmount = dto.expectedAmount;
     const saved = await inst.save();
     // Recalculate sale totals
     await this.salesService.recalculateTotals(inst.saleId.toString());
     return saved;
   }
 
-  async addPaymentToInstallment(installmentId: string, paymentId: string, amount: number): Promise<void> {
+  async addPaymentToInstallment(
+    installmentId: string,
+    paymentId: string,
+    amount: number,
+  ): Promise<void> {
     const inst = await this.installmentModel.findById(installmentId).exec();
     if (!inst) throw new NotFoundException('قسط یافت نشد');
     inst.paidAmount = (inst.paidAmount || 0) + amount;
@@ -142,7 +174,11 @@ export class InstallmentsService {
     await inst.save();
   }
 
-  async removePaymentFromInstallment(installmentId: string, paymentId: string, amount: number): Promise<void> {
+  async removePaymentFromInstallment(
+    installmentId: string,
+    paymentId: string,
+    amount: number,
+  ): Promise<void> {
     const inst = await this.installmentModel.findById(installmentId).exec();
     if (!inst) throw new NotFoundException('قسط یافت نشد');
     inst.paidAmount = Math.max(0, (inst.paidAmount || 0) - amount);

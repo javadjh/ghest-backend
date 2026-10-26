@@ -1,9 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
-import { IS_PUBLIC_KEY } from '@/common/decorators/public.decorator';
-import { ROLES_KEY } from '@/common/decorators/roles.decorator';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { ROLES_KEY } from '../decorators/roles.decorator';
 
 export interface JwtPayload {
   sub: string;
@@ -18,7 +23,9 @@ export class JwtAuthGuard implements CanActivate {
     private readonly jwtService: JwtService,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -40,10 +47,10 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('توکن نامعتبر یا منقضی شده است');
     }
 
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
     if (requiredRoles && requiredRoles.length > 0) {
       const hasRole = requiredRoles.includes(request.user?.role);

@@ -1,13 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable } from '@nestjs/common';
-import { CreatePaymentCommand } from '@/modules/payments/commands/create-payment.command';
-import { PaymentsService } from '@/modules/payments/payments.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
-import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
+import { CreatePaymentCommand } from './create-payment.command';
+import { PaymentsService } from '../payments.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { PaymentResponseDto } from '../dto/payment.dto';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
 
 @CommandHandler(CreatePaymentCommand)
-export class CreatePaymentHandler implements ICommandHandler<CreatePaymentCommand, PaymentResponseDto> {
+export class CreatePaymentHandler implements ICommandHandler<
+  CreatePaymentCommand,
+  PaymentResponseDto
+> {
   constructor(
     private readonly paymentsService: PaymentsService,
     private readonly logger: AppLoggerService,
@@ -43,8 +45,11 @@ export class CreatePaymentHandler implements ICommandHandler<CreatePaymentComman
       paymentMethod: payment.paymentMethod,
       receiptFileId: payment.receiptFileId?.toString?.() || null,
       receiptFileName: payment.receiptFileName,
-      receiptOriginalName: payment.receiptOriginalName || payment.receiptFileName,
-      receiptUrl: payment.receiptFileName ? `/uploads/${payment.receiptFileName}` : undefined,
+      receiptOriginalName:
+        payment.receiptOriginalName || payment.receiptFileName,
+      receiptUrl: payment.receiptFileName
+        ? `/uploads/${payment.receiptFileName}`
+        : undefined,
       notes: payment.notes,
       createdBy: payment.createdBy?.toString?.() || payment.createdBy,
       createdAt: payment.createdAt,

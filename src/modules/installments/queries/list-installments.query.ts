@@ -1,5 +1,5 @@
 import { IQuery } from '@nestjs/cqrs';
-import { ListInstallmentsDto } from '@/modules/installments/dto/installment.dto';
+import { ListInstallmentsDto } from 'src/modules/installments/dto/installment.dto';
 
 export class ListInstallmentsQuery implements IQuery {
   constructor(

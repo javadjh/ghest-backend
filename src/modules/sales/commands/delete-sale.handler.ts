@@ -1,12 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { DeleteSaleCommand } from '@/modules/sales/commands/delete-sale.command';
-import { SalesService } from '@/modules/sales/sales.service';
-import { AppLoggerService } from '@/common/utils/app-logger.service';
-import { LogAction } from '@/modules/logs/schemas/log.schema';
+import { DeleteSaleCommand } from 'src/modules/sales/commands/delete-sale.command';
+import { SalesService } from 'src/modules/sales/sales.service';
+import { AppLoggerService } from 'src/common/utils/app-logger.service';
+import { LogAction } from 'src/modules/logs/schemas/log.schema';
 
 @CommandHandler(DeleteSaleCommand)
-export class DeleteSaleHandler implements ICommandHandler<DeleteSaleCommand, void> {
+export class DeleteSaleHandler implements ICommandHandler<
+  DeleteSaleCommand,
+  void
+> {
   constructor(
     private readonly salesService: SalesService,
     private readonly logger: AppLoggerService,

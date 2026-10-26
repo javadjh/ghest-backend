@@ -1,24 +1,46 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Payment, PaymentDocument } from '@/modules/payments/schemas/payment.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
-import { CreatePaymentDto } from '@/modules/payments/dto/payment.dto';
-import { FilesService } from '@/modules/files/files.service';
-import { PersianDate } from '@/common/utils/persian-date';
+import {
+  Payment,
+  PaymentDocument,
+} from 'src/modules/payments/schemas/payment.schema';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import {
+  Sale,
+  SaleDocument,
+  SaleStatus,
+} from 'src/modules/sales/schemas/sale.schema';
+import { CreatePaymentDto } from 'src/modules/payments/dto/payment.dto';
+import { FilesService } from 'src/modules/files/files.service';
+import { PersianDate } from 'src/common/utils/persian-date';
 
 @Injectable()
 export class PaymentsService {
   constructor(
-    @InjectModel(Payment.name) private readonly paymentModel: Model<PaymentDocument>,
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Payment.name)
+    private readonly paymentModel: Model<PaymentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
     private readonly filesService: FilesService,
   ) {}
 
-  async create(dto: CreatePaymentDto, userId: string): Promise<PaymentDocument> {
-    const installment = await this.installmentModel.findById(dto.installmentId).exec();
+  async create(
+    dto: CreatePaymentDto,
+    userId: string,
+  ): Promise<PaymentDocument> {
+    const installment = await this.installmentModel
+      .findById(dto.installmentId)
+      .exec();
     if (!installment) {
       throw new NotFoundException('قسط یافت نشد');
     }
@@ -70,8 +92,13 @@ export class PaymentsService {
     await installment.save();
 
     // Recalculate sale totals
-    const allInstallments = await this.installmentModel.find({ saleId: sale._id }).exec();
-    const totalPaid = allInstallments.reduce((s, i) => s + (i.paidAmount || 0), 0);
+    const allInstallments = await this.installmentModel
+      .find({ saleId: sale._id })
+      .exec();
+    const totalPaid = allInstallments.reduce(
+      (s, i) => s + (i.paidAmount || 0),
+      0,
+    );
     const allPaid = allInstallments.every((i) =>
       [InstallmentStatus.PAID, InstallmentStatus.CANCELLED].includes(i.status),
     );
@@ -90,10 +117,17 @@ export class PaymentsService {
     if (!payment) throw new NotFoundException('پرداختی یافت نشد');
 
     // Revert installment
-    const installment = await this.installmentModel.findById(payment.installmentId).exec();
+    const installment = await this.installmentModel
+      .findById(payment.installmentId)
+      .exec();
     if (installment) {
-      installment.paidAmount = Math.max(0, (installment.paidAmount || 0) - payment.amount);
-      installment.paymentIds = installment.paymentIds.filter((p) => p.toString() !== id);
+      installment.paidAmount = Math.max(
+        0,
+        (installment.paidAmount || 0) - payment.amount,
+      );
+      installment.paymentIds = installment.paymentIds.filter(
+        (p) => p.toString() !== id,
+      );
       if (installment.paidAmount === 0) {
         installment.status = InstallmentStatus.PENDING;
         installment.paidDate = null;
@@ -105,10 +139,14 @@ export class PaymentsService {
       // Recalc sale
       const sale = await this.saleModel.findById(payment.saleId).exec();
       if (sale) {
-        const all = await this.installmentModel.find({ saleId: sale._id }).exec();
+        const all = await this.installmentModel
+          .find({ saleId: sale._id })
+          .exec();
         const totalPaid = all.reduce((s, i) => s + (i.paidAmount || 0), 0);
         const allPaid = all.every((i) =>
-          [InstallmentStatus.PAID, InstallmentStatus.CANCELLED].includes(i.status),
+          [InstallmentStatus.PAID, InstallmentStatus.CANCELLED].includes(
+            i.status,
+          ),
         );
         sale.totalPaid = totalPaid;
         sale.remainingBalance = Math.max(0, sale.repaymentAmount - totalPaid);
@@ -138,7 +176,8 @@ export class PaymentsService {
     if (filters.search) {
       filter.customerName = { $regex: filters.search, $options: 'i' };
     }
-    if (filters.customerId) filter.customerId = new Types.ObjectId(filters.customerId);
+    if (filters.customerId)
+      filter.customerId = new Types.ObjectId(filters.customerId);
     if (filters.saleId) filter.saleId = new Types.ObjectId(filters.saleId);
     if (filters.fromDate || filters.toDate) {
       filter.paymentDate = {};
@@ -147,7 +186,12 @@ export class PaymentsService {
     }
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      this.paymentModel.find(filter).sort({ paymentDate: -1 }).skip(skip).limit(limit).exec(),
+      this.paymentModel
+        .find(filter)
+        .sort({ paymentDate: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.paymentModel.countDocuments(filter).exec(),
     ]);
     return { items, total };

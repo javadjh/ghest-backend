@@ -1,11 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { ListUsersQuery } from '@/modules/users/queries/list-users.query';
-import { UsersService } from '@/modules/users/users.service';
-import { PaginatedUsersDto, UserResponseDto } from '@/modules/users/dto/user-response.dto';
+import { ListUsersQuery } from 'src/modules/users/queries/list-users.query';
+import { UsersService } from 'src/modules/users/users.service';
+import {
+  PaginatedUsersDto,
+  UserResponseDto,
+} from 'src/modules/users/dto/user-response.dto';
 
 @QueryHandler(ListUsersQuery)
-export class ListUsersHandler implements IQueryHandler<ListUsersQuery, PaginatedUsersDto> {
+export class ListUsersHandler implements IQueryHandler<
+  ListUsersQuery,
+  PaginatedUsersDto
+> {
   constructor(private readonly usersService: UsersService) {}
 
   async execute(query: ListUsersQuery): Promise<PaginatedUsersDto> {

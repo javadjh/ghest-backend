@@ -1,14 +1,19 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetInstallmentsBySaleQuery } from '@/modules/installments/queries/get-installments-by-sale.query';
-import { InstallmentsService } from '@/modules/installments/installments.service';
-import { InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
+import { GetInstallmentsBySaleQuery } from 'src/modules/installments/queries/get-installments-by-sale.query';
+import { InstallmentsService } from 'src/modules/installments/installments.service';
+import { InstallmentResponseDto } from 'src/modules/installments/dto/installment.dto';
 
 @QueryHandler(GetInstallmentsBySaleQuery)
-export class GetInstallmentsBySaleHandler implements IQueryHandler<GetInstallmentsBySaleQuery, InstallmentResponseDto[]> {
+export class GetInstallmentsBySaleHandler implements IQueryHandler<
+  GetInstallmentsBySaleQuery,
+  InstallmentResponseDto[]
+> {
   constructor(private readonly installmentsService: InstallmentsService) {}
 
-  async execute(query: GetInstallmentsBySaleQuery): Promise<InstallmentResponseDto[]> {
+  async execute(
+    query: GetInstallmentsBySaleQuery,
+  ): Promise<InstallmentResponseDto[]> {
     const items = await this.installmentsService.findBySale(query.saleId);
     return items.map((i) => ({
       id: (i._id as any).toString(),

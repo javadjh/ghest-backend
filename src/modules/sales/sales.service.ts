@@ -1,19 +1,36 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
-import { CreateSaleDto, UpdateSaleDto } from '@/modules/sales/dto/sale.dto';
-import { calculateSale } from '@/modules/sales/helpers/sale-calculator';
-import { PersianDate } from '@/common/utils/persian-date';
+import {
+  Sale,
+  SaleDocument,
+  SaleStatus,
+} from 'src/modules/sales/schemas/sale.schema';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import {
+  Customer,
+  CustomerDocument,
+} from 'src/modules/customers/schemas/customer.schema';
+import { CreateSaleDto, UpdateSaleDto } from 'src/modules/sales/dto/sale.dto';
+import { calculateSale } from 'src/modules/sales/helpers/sale-calculator';
+import { PersianDate } from 'src/common/utils/persian-date';
 
 @Injectable()
 export class SalesService {
   constructor(
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
-    @InjectModel(Customer.name) private readonly customerModel: Model<CustomerDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Customer.name)
+    private readonly customerModel: Model<CustomerDocument>,
   ) {}
 
   async create(dto: CreateSaleDto, userId: string): Promise<SaleDocument> {
@@ -91,10 +108,9 @@ export class SalesService {
     await this.installmentModel.insertMany(installmentDocs);
 
     // Update customer's total purchases
-    await this.customerModel.updateOne(
-      { _id: customer._id },
-      { $inc: { totalPurchases: 1 } },
-    ).exec();
+    await this.customerModel
+      .updateOne({ _id: customer._id }, { $inc: { totalPurchases: 1 } })
+      .exec();
 
     return created;
   }
@@ -245,7 +261,8 @@ export class SalesService {
       ];
     }
     if (filters.status) filter.status = filters.status;
-    if (filters.customerId) filter.customerId = new Types.ObjectId(filters.customerId);
+    if (filters.customerId)
+      filter.customerId = new Types.ObjectId(filters.customerId);
     if (filters.phoneModel) {
       filter.phone = { $regex: filters.phoneModel, $options: 'i' };
     }
@@ -257,7 +274,12 @@ export class SalesService {
 
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      this.saleModel.find(filter).sort({ saleDate: -1, createdAt: -1 }).skip(skip).limit(limit).exec(),
+      this.saleModel
+        .find(filter)
+        .sort({ saleDate: -1, createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.saleModel.countDocuments(filter).exec(),
     ]);
     return { items, total };

@@ -1,15 +1,29 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { ListPaymentsQuery } from '@/modules/payments/queries/list-payments.query';
-import { PaymentsService } from '@/modules/payments/payments.service';
-import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
+import { ListPaymentsQuery } from 'src/modules/payments/queries/list-payments.query';
+import { PaymentsService } from 'src/modules/payments/payments.service';
+import { PaymentResponseDto } from 'src/modules/payments/dto/payment.dto';
 
 @QueryHandler(ListPaymentsQuery)
-export class ListPaymentsHandler implements IQueryHandler<ListPaymentsQuery, { items: PaymentResponseDto[]; total: number; page: number; limit: number }> {
+export class ListPaymentsHandler implements IQueryHandler<
+  ListPaymentsQuery,
+  { items: PaymentResponseDto[]; total: number; page: number; limit: number }
+> {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  async execute(query: ListPaymentsQuery): Promise<{ items: PaymentResponseDto[]; total: number; page: number; limit: number }> {
-    const { items, total } = await this.paymentsService.list(query.page, query.limit, query.filters);
+  async execute(
+    query: ListPaymentsQuery,
+  ): Promise<{
+    items: PaymentResponseDto[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const { items, total } = await this.paymentsService.list(
+      query.page,
+      query.limit,
+      query.filters,
+    );
     return {
       items: items.map((p) => ({
         id: (p._id as any).toString(),
@@ -22,8 +36,11 @@ export class ListPaymentsHandler implements IQueryHandler<ListPaymentsQuery, { i
         paymentMethod: p.paymentMethod,
         receiptFileId: p.receiptFileId?.toString?.() || null,
         receiptFileName: p.receiptFileName,
-        receiptOriginalName: (p as any).receiptOriginalName || p.receiptFileName,
-        receiptUrl: p.receiptFileName ? `/uploads/${p.receiptFileName}` : undefined,
+        receiptOriginalName:
+          (p as any).receiptOriginalName || p.receiptFileName,
+        receiptUrl: p.receiptFileName
+          ? `/uploads/${p.receiptFileName}`
+          : undefined,
         notes: p.notes,
         createdBy: p.createdBy?.toString?.() || p.createdBy,
         createdAt: p.createdAt,

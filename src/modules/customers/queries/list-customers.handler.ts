@@ -1,15 +1,28 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ListCustomersQuery } from '@/modules/customers/queries/list-customers.query';
-import { CustomersService } from '@/modules/customers/customers.service';
-import { CustomerResponseDto } from '@/modules/customers/dto/customer.dto';
+import { ListCustomersQuery } from './list-customers.query';
+import { CustomerResponseDto } from '../dto/customer.dto';
+import { CustomersService } from '../customers.service';
 
 @QueryHandler(ListCustomersQuery)
-export class ListCustomersHandler implements IQueryHandler<ListCustomersQuery, { items: CustomerResponseDto[]; total: number; page: number; limit: number }> {
+export class ListCustomersHandler implements IQueryHandler<
+  ListCustomersQuery,
+  { items: CustomerResponseDto[]; total: number; page: number; limit: number }
+> {
   constructor(private readonly customersService: CustomersService) {}
 
-  async execute(query: ListCustomersQuery): Promise<{ items: CustomerResponseDto[]; total: number; page: number; limit: number }> {
-    const { items, total } = await this.customersService.list(query.page, query.limit, query.search);
+  async execute(
+    query: ListCustomersQuery,
+  ): Promise<{
+    items: CustomerResponseDto[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const { items, total } = await this.customersService.list(
+      query.page,
+      query.limit,
+      query.search,
+    );
     return {
       items: items.map((c) => ({
         id: (c._id as any).toString(),

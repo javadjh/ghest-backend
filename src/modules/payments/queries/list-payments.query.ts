@@ -1,5 +1,5 @@
 import { IQuery } from '@nestjs/cqrs';
-import { ListPaymentsDto } from '@/modules/payments/dto/payment.dto';
+import { ListPaymentsDto } from 'src/modules/payments/dto/payment.dto';
 
 export class ListPaymentsQuery implements IQuery {
   constructor(

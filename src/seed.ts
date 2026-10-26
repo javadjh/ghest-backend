@@ -4,11 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
-import { UsersModule } from '@/modules/users/users.module';
-import { UsersService } from '@/modules/users/users.service';
-import { UserRole } from '@/modules/users/schemas/user.schema';
-import { LoggerModule } from '@/common/utils/logger.module';
-import { Log, LogSchema } from '@/modules/logs/schemas/log.schema';
+import { UsersModule } from 'src/modules/users/users.module';
+import { UsersService } from 'src/modules/users/users.service';
+import { UserRole } from 'src/modules/users/schemas/user.schema';
+import { LoggerModule } from 'src/common/utils/logger.module';
+import { Log, LogSchema } from 'src/modules/logs/schemas/log.schema';
 
 @Module({
   imports: [
@@ -17,13 +17,13 @@ import { Log, LogSchema } from '@/modules/logs/schemas/log.schema';
       global: true,
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET') || 'change-me',
-        signOptions: { expiresIn: config.get<string>('JWT_EXPIRES_IN') || '7d' },
+        signOptions: {
+          expiresIn: config.get<string>('JWT_EXPIRES_IN') || '7d',
+        },
       }),
       inject: [ConfigService],
     }),
-    MongooseModule.forRoot(
-      'mongodb://127.0.0.1:27017/installment_db',
-    ),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/installment_db'),
     MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }]),
     LoggerModule,
     CqrsModule,
@@ -41,8 +41,18 @@ async function bootstrap() {
   const username = process.env.DEFAULT_ADMIN_USERNAME || 'admin';
   const password = process.env.DEFAULT_ADMIN_PASSWORD || 'admin12345';
 
-  await usersService.ensureSeed(username, password, 'مدیر سیستم', UserRole.ADMIN);
-  await usersService.ensureSeed('operator', 'operator123', 'اپراتور سیستم', UserRole.OPERATOR);
+  await usersService.ensureSeed(
+    username,
+    password,
+    'مدیر سیستم',
+    UserRole.ADMIN,
+  );
+  await usersService.ensureSeed(
+    'operator',
+    'operator123',
+    'اپراتور سیستم',
+    UserRole.OPERATOR,
+  );
 
   console.log('✅ Seed completed: admin/' + username);
   await app.close();

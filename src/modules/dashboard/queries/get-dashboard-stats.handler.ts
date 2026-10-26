@@ -1,22 +1,41 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
-import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
-import { Payment, PaymentDocument } from '@/modules/payments/schemas/payment.schema';
-import { PersianDate } from '@/common/utils/persian-date';
-import { DashboardStatsDto } from '@/modules/dashboard/dto/dashboard.dto';
-import { GetDashboardStatsQuery } from '@/modules/dashboard/queries/get-dashboard-stats.query';
+import {
+  Sale,
+  SaleDocument,
+  SaleStatus,
+} from 'src/modules/sales/schemas/sale.schema';
+import {
+  Installment,
+  InstallmentDocument,
+  InstallmentStatus,
+} from 'src/modules/installments/schemas/installment.schema';
+import {
+  Customer,
+  CustomerDocument,
+} from 'src/modules/customers/schemas/customer.schema';
+import { GetDashboardStatsQuery } from './get-dashboard-stats.query';
+import { DashboardStatsDto } from '../dto/dashboard.dto';
+import {
+  Payment,
+  PaymentDocument,
+} from 'src/modules/payments/schemas/payment.schema';
+import { PersianDate } from 'src/common/utils/persian-date';
 
 @QueryHandler(GetDashboardStatsQuery)
-export class GetDashboardStatsHandler implements IQueryHandler<GetDashboardStatsQuery, DashboardStatsDto> {
+export class GetDashboardStatsHandler implements IQueryHandler<
+  GetDashboardStatsQuery,
+  DashboardStatsDto
+> {
   constructor(
     @InjectModel(Sale.name) private readonly saleModel: Model<SaleDocument>,
-    @InjectModel(Installment.name) private readonly installmentModel: Model<InstallmentDocument>,
-    @InjectModel(Customer.name) private readonly customerModel: Model<CustomerDocument>,
-    @InjectModel(Payment.name) private readonly paymentModel: Model<PaymentDocument>,
+    @InjectModel(Installment.name)
+    private readonly installmentModel: Model<InstallmentDocument>,
+    @InjectModel(Customer.name)
+    private readonly customerModel: Model<CustomerDocument>,
+    @InjectModel(Payment.name)
+    private readonly paymentModel: Model<PaymentDocument>,
   ) {}
 
   async execute(): Promise<DashboardStatsDto> {
@@ -25,24 +44,35 @@ export class GetDashboardStatsHandler implements IQueryHandler<GetDashboardStats
     const thisMonthKey = PersianDate.currentMonthKey();
     const thisYear = PersianDate.yearFromDate(today);
 
-    const [sales, customers, installments, paymentsToday, thisMonthPayments, salesAgg] = await Promise.all([
+    const [
+      sales,
+      customers,
+      installments,
+      paymentsToday,
+      thisMonthPayments,
+      salesAgg,
+    ] = await Promise.all([
       this.saleModel.find({ status: { $ne: SaleStatus.CANCELLED } }).exec(),
       this.customerModel.countDocuments().exec(),
       this.installmentModel.find().exec(),
       this.paymentModel.find({ paymentDate: todayStart }).exec(),
-      this.paymentModel.find({ paymentDate: { $regex: `^${thisMonthKey}` } }).exec(),
-      this.saleModel.aggregate([
-        { $match: { status: { $ne: SaleStatus.CANCELLED } } },
-        {
-          $group: {
-            _id: null,
-            totalRevenue: { $sum: '$salePrice' },
-            totalPurchase: { $sum: '$purchasePrice' },
-            totalSaleProfit: { $sum: '$saleProfit' },
-            totalExpectedProfit: { $sum: '$totalProfit' },
+      this.paymentModel
+        .find({ paymentDate: { $regex: `^${thisMonthKey}` } })
+        .exec(),
+      this.saleModel
+        .aggregate([
+          { $match: { status: { $ne: SaleStatus.CANCELLED } } },
+          {
+            $group: {
+              _id: null,
+              totalRevenue: { $sum: '$salePrice' },
+              totalPurchase: { $sum: '$purchasePrice' },
+              totalSaleProfit: { $sum: '$saleProfit' },
+              totalExpectedProfit: { $sum: '$totalProfit' },
+            },
           },
-        },
-      ]).exec(),
+        ])
+        .exec(),
     ]);
 
     const totalRevenue = salesAgg[0]?.totalRevenue || 0;
@@ -55,7 +85,9 @@ export class GetDashboardStatsHandler implements IQueryHandler<GetDashboardStats
     // We have sales + installments, let's compute:
     let realized = 0;
     for (const sale of sales) {
-      const insts = installments.filter((i) => i.saleId.toString() === sale._id.toString());
+      const insts = installments.filter(
+        (i) => i.saleId.toString() === sale._id.toString(),
+      );
       const paidOnSale = insts.reduce((s, i) => s + (i.paidAmount || 0), 0);
       if (sale.repaymentAmount > 0) {
         const ratio = paidOnSale / sale.repaymentAmount;
@@ -93,7 +125,10 @@ export class GetDashboardStatsHandler implements IQueryHandler<GetDashboardStats
       }
     }
 
-    const todayPaymentsTotal = paymentsToday.reduce((s, p) => s + (p.amount || 0), 0);
+    const todayPaymentsTotal = paymentsToday.reduce(
+      (s, p) => s + (p.amount || 0),
+      0,
+    );
 
     // this month profit: realized portion of installments paid this month
     // Simpler: sum of payments' corresponding profit ratio
@@ -101,14 +136,16 @@ export class GetDashboardStatsHandler implements IQueryHandler<GetDashboardStats
     for (const p of thisMonthPayments) {
       const sale = sales.find((s) => s._id.toString() === p.saleId.toString());
       if (!sale) continue;
-      const ratio = sale.repaymentAmount > 0 ? p.amount / sale.repaymentAmount : 0;
+      const ratio =
+        sale.repaymentAmount > 0 ? p.amount / sale.repaymentAmount : 0;
       thisMonthProfit += sale.totalProfit * ratio;
     }
     thisMonthProfit = Math.round(thisMonthProfit);
 
     return {
       totalSales: sales.length,
-      totalActiveSales: sales.filter((s) => s.status === SaleStatus.ACTIVE).length,
+      totalActiveSales: sales.filter((s) => s.status === SaleStatus.ACTIVE)
+        .length,
       totalCustomers: customers,
       totalRevenue,
       totalPurchase,

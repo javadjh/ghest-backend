@@ -12,15 +12,19 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { ApiAuth } from '@/common/decorators/api-auth.decorator';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { CreatePaymentDto, ListPaymentsDto, PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
-import { CreatePaymentCommand } from '@/modules/payments/commands/create-payment.command';
-import { DeletePaymentCommand } from '@/modules/payments/commands/delete-payment.command';
-import { ListPaymentsQuery } from '@/modules/payments/queries/list-payments.query';
-import { GetPaymentByIdQuery } from '@/modules/payments/queries/get-payment-by-id.query';
-import { GetPaymentsByInstallmentQuery } from '@/modules/payments/queries/get-payments-by-installment.query';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { ApiAuth } from 'src/common/decorators/api-auth.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import {
+  CreatePaymentDto,
+  ListPaymentsDto,
+  PaymentResponseDto,
+} from 'src/modules/payments/dto/payment.dto';
+import { CreatePaymentCommand } from 'src/modules/payments/commands/create-payment.command';
+import { DeletePaymentCommand } from 'src/modules/payments/commands/delete-payment.command';
+import { ListPaymentsQuery } from 'src/modules/payments/queries/list-payments.query';
+import { GetPaymentByIdQuery } from 'src/modules/payments/queries/get-payment-by-id.query';
+import { GetPaymentsByInstallmentQuery } from 'src/modules/payments/queries/get-payments-by-installment.query';
 
 @ApiTags('پرداختی‌ها')
 @ApiAuth()
@@ -41,13 +45,19 @@ export class PaymentsController {
     @Query('limit') limit = 20,
     @Query() filters: ListPaymentsDto,
   ) {
-    return this.queryBus.execute(new ListPaymentsQuery(Number(page) || 1, Number(limit) || 20, filters));
+    return this.queryBus.execute(
+      new ListPaymentsQuery(Number(page) || 1, Number(limit) || 20, filters),
+    );
   }
 
   @Get('by-installment/:installmentId')
   @ApiOperation({ summary: 'پرداختی‌های یک قسط' })
-  async byInstallment(@Param('installmentId') installmentId: string): Promise<PaymentResponseDto[]> {
-    return this.queryBus.execute(new GetPaymentsByInstallmentQuery(installmentId));
+  async byInstallment(
+    @Param('installmentId') installmentId: string,
+  ): Promise<PaymentResponseDto[]> {
+    return this.queryBus.execute(
+      new GetPaymentsByInstallmentQuery(installmentId),
+    );
   }
 
   @Get(':id')
@@ -65,7 +75,12 @@ export class PaymentsController {
     @Req() req: Request,
   ): Promise<PaymentResponseDto> {
     return this.commandBus.execute(
-      new CreatePaymentCommand(dto, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new CreatePaymentCommand(
+        dto,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 
@@ -78,7 +93,12 @@ export class PaymentsController {
     @Req() req: Request,
   ): Promise<void> {
     return this.commandBus.execute(
-      new DeletePaymentCommand(id, actorId, actorName, (req.headers['x-forwarded-for'] as string) || req.ip),
+      new DeletePaymentCommand(
+        id,
+        actorId,
+        actorName,
+        (req.headers['x-forwarded-for'] as string) || req.ip,
+      ),
     );
   }
 }

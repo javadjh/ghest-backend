@@ -1,4 +1,4 @@
-import { PersianDate } from '@/common/utils/persian-date';
+import { PersianDate } from 'src/common/utils/persian-date';
 
 export interface SaleCalculationInput {
   purchasePrice: number; // مبلغ خرید
@@ -42,7 +42,9 @@ export interface SaleCalculationResult {
  *
  * سررسید هر قسط: از تاریخ فروش یک ماه بعد از ماه N ام حساب می‌شود.
  */
-export function calculateSale(input: SaleCalculationInput): SaleCalculationResult {
+export function calculateSale(
+  input: SaleCalculationInput,
+): SaleCalculationResult {
   const {
     purchasePrice,
     salePrice,
@@ -63,7 +65,9 @@ export function calculateSale(input: SaleCalculationInput): SaleCalculationResul
   }
 
   const loanAmount = salePrice - downPayment; // وام
-  const totalProfit = Math.round((loanAmount * monthlyProfitRate * installmentCount) / 100); // سود کلی
+  const totalProfit = Math.round(
+    (loanAmount * monthlyProfitRate * installmentCount) / 100,
+  ); // سود کلی
   const repaymentAmount = loanAmount + totalProfit; // بازپرداخت
   const profitPerInstallment = Math.round(totalProfit / installmentCount); // سود هر قسط (میانگین)
   const installmentAmount = Math.round(repaymentAmount / installmentCount); // هر قسط
@@ -76,7 +80,8 @@ export function calculateSale(input: SaleCalculationInput): SaleCalculationResul
 
   const fullInstallments = Math.floor(installmentCount);
   const fractionalPart = installmentCount - fullInstallments; // e.g. 0.5
-  const totalInstallmentsToCreate = fullInstallments + (fractionalPart > 0 ? 1 : 0);
+  const totalInstallmentsToCreate =
+    fullInstallments + (fractionalPart > 0 ? 1 : 0);
 
   const installments: InstallmentPlanItem[] = [];
 

@@ -1,13 +1,14 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetCurrentUserQuery } from '@/modules/auth/queries/get-current-user.query';
-import { UsersService } from '@/modules/users/users.service';
-import { CurrentUserResponseDto } from '@/modules/auth/dto/login-response.dto';
+import { NotFoundException } from '@nestjs/common';
+import { GetCurrentUserQuery } from './get-current-user.query';
+import { CurrentUserResponseDto } from '../dto/login-response.dto';
+import { UsersService } from 'src/modules/users/users.service';
 
 @QueryHandler(GetCurrentUserQuery)
-export class GetCurrentUserHandler
-  implements IQueryHandler<GetCurrentUserQuery, CurrentUserResponseDto>
-{
+export class GetCurrentUserHandler implements IQueryHandler<
+  GetCurrentUserQuery,
+  CurrentUserResponseDto
+> {
   constructor(private readonly usersService: UsersService) {}
 
   async execute(query: GetCurrentUserQuery): Promise<CurrentUserResponseDto> {

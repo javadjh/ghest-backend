@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { ConfigService } from '@nestjs/config';
-import { File, FileDocument } from '@/modules/files/schemas/file.schema';
+import { File, FileDocument } from 'src/modules/files/schemas/file.schema';
 
 @Injectable()
 export class FilesService {
@@ -13,7 +17,11 @@ export class FilesService {
     private readonly configService: ConfigService,
   ) {}
 
-  async save(file: Express.Multer.File, userId: string, category: string = 'receipt'): Promise<FileDocument> {
+  async save(
+    file: Express.Multer.File,
+    userId: string,
+    category: string = 'receipt',
+  ): Promise<FileDocument> {
     if (!file) {
       throw new BadRequestException('فایل ارسال نشده است');
     }

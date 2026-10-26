@@ -1,4 +1,4 @@
-import { PersianDate } from '../../../common/utils/persian-date';
+import { PersianDate } from '@/common/utils/persian-date';
 
 export interface SaleCalculationInput {
   purchasePrice: number; // مبلغ خرید

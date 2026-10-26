@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { ResetPasswordCommand } from './reset-password.command';
-import { UsersService } from '../users.service';
-import { AppLoggerService } from '../../../common/utils/app-logger.service';
-import { LogAction } from '../../logs/schemas/log.schema';
+import { ResetPasswordCommand } from '@/modules/users/commands/reset-password.command';
+import { UsersService } from '@/modules/users/users.service';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
 
 @CommandHandler(ResetPasswordCommand)
 export class ResetPasswordHandler implements ICommandHandler<ResetPasswordCommand, void> {

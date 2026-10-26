@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { ListSalesQuery } from './list-sales.query';
-import { SalesService } from '../sales.service';
-import { SaleResponseDto } from '../dto/sale.dto';
+import { ListSalesQuery } from '@/modules/sales/queries/list-sales.query';
+import { SalesService } from '@/modules/sales/sales.service';
+import { SaleResponseDto } from '@/modules/sales/dto/sale.dto';
 
 @QueryHandler(ListSalesQuery)
 export class ListSalesHandler implements IQueryHandler<ListSalesQuery, { items: SaleResponseDto[]; total: number; page: number; limit: number }> {

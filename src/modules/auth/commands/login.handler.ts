@@ -3,11 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { LoginCommand } from './login.command';
-import { UsersService } from '../../users/users.service';
-import { AppLoggerService } from '../../../common/utils/app-logger.service';
-import { LogAction } from '../../logs/schemas/log.schema';
-import { LoginResponseDto } from '../dto/login-response.dto';
+import { LoginCommand } from '@/modules/auth/commands/login.command';
+import { UsersService } from '@/modules/users/users.service';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
+import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto';
 
 @CommandHandler(LoginCommand)
 export class LoginHandler implements ICommandHandler<LoginCommand, LoginResponseDto> {

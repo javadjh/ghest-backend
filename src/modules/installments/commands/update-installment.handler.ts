@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { UpdateInstallmentCommand } from './update-installment.command';
-import { InstallmentsService } from '../installments.service';
-import { AppLoggerService } from '../../../common/utils/app-logger.service';
-import { LogAction } from '../../logs/schemas/log.schema';
-import { InstallmentResponseDto } from '../dto/installment.dto';
+import { UpdateInstallmentCommand } from '@/modules/installments/commands/update-installment.command';
+import { InstallmentsService } from '@/modules/installments/installments.service';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
+import { InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
 
 @CommandHandler(UpdateInstallmentCommand)
 export class UpdateInstallmentHandler implements ICommandHandler<UpdateInstallmentCommand, InstallmentResponseDto> {

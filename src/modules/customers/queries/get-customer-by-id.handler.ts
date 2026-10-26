@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetCustomerByIdQuery } from './get-customer-by-id.query';
-import { CustomersService } from '../customers.service';
-import { CustomerResponseDto } from '../dto/customer.dto';
+import { GetCustomerByIdQuery } from '@/modules/customers/queries/get-customer-by-id.query';
+import { CustomersService } from '@/modules/customers/customers.service';
+import { CustomerResponseDto } from '@/modules/customers/dto/customer.dto';
 
 @QueryHandler(GetCustomerByIdQuery)
 export class GetCustomerByIdHandler implements IQueryHandler<GetCustomerByIdQuery, CustomerResponseDto> {

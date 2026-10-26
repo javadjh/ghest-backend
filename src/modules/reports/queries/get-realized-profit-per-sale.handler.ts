@@ -2,10 +2,10 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Sale, SaleDocument, SaleStatus } from '../../sales/schemas/sale.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '../../installments/schemas/installment.schema';
-import { GetRealizedProfitPerSaleQuery } from './get-realized-profit-per-sale.query';
-import { RealizedProfitPerSaleDto } from '../dto/report.dto';
+import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { GetRealizedProfitPerSaleQuery } from '@/modules/reports/queries/get-realized-profit-per-sale.query';
+import { RealizedProfitPerSaleDto } from '@/modules/reports/dto/report.dto';
 
 @QueryHandler(GetRealizedProfitPerSaleQuery)
 export class GetRealizedProfitPerSaleHandler implements IQueryHandler<GetRealizedProfitPerSaleQuery, RealizedProfitPerSaleDto[]> {

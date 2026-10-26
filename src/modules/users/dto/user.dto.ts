@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, MinLength, MaxLength, IsBoolean } from 'class-validator';
-import { UserRole } from '../schemas/user.schema';
+import { UserRole } from '@/modules/users/schemas/user.schema';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'ali_manager' })

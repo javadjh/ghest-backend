@@ -13,15 +13,15 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { CreateSaleDto, UpdateSaleDto, SaleResponseDto } from './dto/sale.dto';
-import { CreateSaleCommand } from './commands/create-sale.command';
-import { UpdateSaleCommand } from './commands/update-sale.command';
-import { DeleteSaleCommand } from './commands/delete-sale.command';
-import { ListSalesQuery } from './queries/list-sales.query';
-import { GetSaleByIdQuery } from './queries/get-sale-by-id.query';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { CreateSaleDto, UpdateSaleDto, SaleResponseDto } from '@/modules/sales/dto/sale.dto';
+import { CreateSaleCommand } from '@/modules/sales/commands/create-sale.command';
+import { UpdateSaleCommand } from '@/modules/sales/commands/update-sale.command';
+import { DeleteSaleCommand } from '@/modules/sales/commands/delete-sale.command';
+import { ListSalesQuery } from '@/modules/sales/queries/list-sales.query';
+import { GetSaleByIdQuery } from '@/modules/sales/queries/get-sale-by-id.query';
 
 @ApiTags('فروش‌ها')
 @ApiAuth()

@@ -2,14 +2,14 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { LoginDto } from './dto/login.dto';
-import { LoginResponseDto } from './dto/login-response.dto';
-import { LoginCommand } from './commands/login.command';
-import { GetCurrentUserQuery } from './queries/get-current-user.query';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { Public } from '../../common/decorators/public.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
+import { LoginDto } from '@/modules/auth/dto/login.dto';
+import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto';
+import { LoginCommand } from '@/modules/auth/commands/login.command';
+import { GetCurrentUserQuery } from '@/modules/auth/queries/get-current-user.query';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { Public } from '@/common/decorators/public.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
 
 @ApiTags('احراز هویت')
 @Controller('auth')

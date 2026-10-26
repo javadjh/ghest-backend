@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetPaymentByIdQuery } from './get-payment-by-id.query';
-import { PaymentsService } from '../payments.service';
-import { PaymentResponseDto } from '../dto/payment.dto';
+import { GetPaymentByIdQuery } from '@/modules/payments/queries/get-payment-by-id.query';
+import { PaymentsService } from '@/modules/payments/payments.service';
+import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
 
 @QueryHandler(GetPaymentByIdQuery)
 export class GetPaymentByIdHandler implements IQueryHandler<GetPaymentByIdQuery, PaymentResponseDto> {

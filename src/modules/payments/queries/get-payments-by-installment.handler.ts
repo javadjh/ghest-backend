@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { GetPaymentsByInstallmentQuery } from './get-payments-by-installment.query';
-import { PaymentsService } from '../payments.service';
-import { PaymentResponseDto } from '../dto/payment.dto';
+import { GetPaymentsByInstallmentQuery } from '@/modules/payments/queries/get-payments-by-installment.query';
+import { PaymentsService } from '@/modules/payments/payments.service';
+import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
 
 @QueryHandler(GetPaymentsByInstallmentQuery)
 export class GetPaymentsByInstallmentHandler implements IQueryHandler<GetPaymentsByInstallmentQuery, PaymentResponseDto[]> {

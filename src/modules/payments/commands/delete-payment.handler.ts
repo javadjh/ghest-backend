@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { DeletePaymentCommand } from './delete-payment.command';
-import { PaymentsService } from '../payments.service';
-import { AppLoggerService } from '../../../common/utils/app-logger.service';
-import { LogAction } from '../../logs/schemas/log.schema';
+import { DeletePaymentCommand } from '@/modules/payments/commands/delete-payment.command';
+import { PaymentsService } from '@/modules/payments/payments.service';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
 
 @CommandHandler(DeletePaymentCommand)
 export class DeletePaymentHandler implements ICommandHandler<DeletePaymentCommand, void> {

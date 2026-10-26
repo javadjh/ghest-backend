@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AuthController } from './auth.controller';
-import { LoginHandler } from './commands/login.handler';
-import { GetCurrentUserHandler } from './queries/get-current-user.handler';
-import { UsersModule } from '../users/users.module';
-import { LogsModule } from '../logs/logs.module';
-import { JwtStrategyService } from './strategies/jwt.strategy';
+import { AuthController } from '@/modules/auth/auth.controller';
+import { LoginHandler } from '@/modules/auth/commands/login.handler';
+import { GetCurrentUserHandler } from '@/modules/auth/queries/get-current-user.handler';
+import { UsersModule } from '@/modules/users/users.module';
+import { LogsModule } from '@/modules/logs/logs.module';
+import { JwtStrategyService } from '@/modules/auth/strategies/jwt.strategy';
 
 @Module({
   imports: [

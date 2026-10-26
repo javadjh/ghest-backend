@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
-import { UpdateStoreInfoDto } from '../dto/store-info.dto';
+import { UpdateStoreInfoDto } from '@/modules/store-info/dto/store-info.dto';
 
 export class UpdateStoreInfoCommand implements ICommand {
   constructor(

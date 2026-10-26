@@ -12,15 +12,15 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { CreatePaymentDto, ListPaymentsDto, PaymentResponseDto } from './dto/payment.dto';
-import { CreatePaymentCommand } from './commands/create-payment.command';
-import { DeletePaymentCommand } from './commands/delete-payment.command';
-import { ListPaymentsQuery } from './queries/list-payments.query';
-import { GetPaymentByIdQuery } from './queries/get-payment-by-id.query';
-import { GetPaymentsByInstallmentQuery } from './queries/get-payments-by-installment.query';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { CreatePaymentDto, ListPaymentsDto, PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
+import { CreatePaymentCommand } from '@/modules/payments/commands/create-payment.command';
+import { DeletePaymentCommand } from '@/modules/payments/commands/delete-payment.command';
+import { ListPaymentsQuery } from '@/modules/payments/queries/list-payments.query';
+import { GetPaymentByIdQuery } from '@/modules/payments/queries/get-payment-by-id.query';
+import { GetPaymentsByInstallmentQuery } from '@/modules/payments/queries/get-payments-by-installment.query';
 
 @ApiTags('پرداختی‌ها')
 @ApiAuth()

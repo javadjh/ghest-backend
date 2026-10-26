@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
-import { CreatePaymentDto } from '../dto/payment.dto';
+import { CreatePaymentDto } from '@/modules/payments/dto/payment.dto';
 
 export class CreatePaymentCommand implements ICommand {
   constructor(

@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { UpdateSaleCommand } from './update-sale.command';
-import { SalesService } from '../sales.service';
-import { AppLoggerService } from '../../../common/utils/app-logger.service';
-import { LogAction } from '../../logs/schemas/log.schema';
-import { SaleResponseDto } from '../dto/sale.dto';
+import { UpdateSaleCommand } from '@/modules/sales/commands/update-sale.command';
+import { SalesService } from '@/modules/sales/sales.service';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
+import { SaleResponseDto } from '@/modules/sales/dto/sale.dto';
 
 @CommandHandler(UpdateSaleCommand)
 export class UpdateSaleHandler implements ICommandHandler<UpdateSaleCommand, SaleResponseDto> {

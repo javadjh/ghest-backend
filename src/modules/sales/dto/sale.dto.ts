@@ -12,7 +12,7 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { GuaranteeType, SaleStatus } from '../schemas/sale.schema';
+import { GuaranteeType, SaleStatus } from '@/modules/sales/schemas/sale.schema';
 
 export class GuaranteeDto {
   @ApiProperty({ enum: GuaranteeType, example: GuaranteeType.CHEQUE })

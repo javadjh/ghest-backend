@@ -2,12 +2,12 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PersianDate } from '../../../common/utils/persian-date';
-import { Sale, SaleDocument, SaleStatus } from '../../sales/schemas/sale.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '../../installments/schemas/installment.schema';
-import { Payment, PaymentDocument } from '../../payments/schemas/payment.schema';
-import { GetProfitReportQuery } from './get-profit-report.query';
-import { ProfitByPeriodDto, ProfitByMonthItem } from '../dto/report.dto';
+import { PersianDate } from '@/common/utils/persian-date';
+import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { Payment, PaymentDocument } from '@/modules/payments/schemas/payment.schema';
+import { GetProfitReportQuery } from '@/modules/reports/queries/get-profit-report.query';
+import { ProfitByPeriodDto, ProfitByMonthItem } from '@/modules/reports/dto/report.dto';
 
 @QueryHandler(GetProfitReportQuery)
 export class GetProfitReportHandler implements IQueryHandler<GetProfitReportQuery, ProfitByPeriodDto & { items: ProfitByMonthItem[] }> {

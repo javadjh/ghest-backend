@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Log, LogAction } from '../../modules/logs/schemas/log.schema';
+import { Log, LogAction } from "@/modules/logs/schemas/log.schema";
+import { Injectable, Logger } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 
 export interface LogPayload {
   action: LogAction;
@@ -16,11 +16,9 @@ export interface LogPayload {
 
 @Injectable()
 export class AppLoggerService {
-  private readonly logger = new Logger('Audit');
+  private readonly logger = new Logger("Audit");
 
-  constructor(
-    @InjectModel(Log.name) private readonly logModel: Model<any>,
-  ) {}
+  constructor(@InjectModel(Log.name) private readonly logModel: Model<any>) {}
 
   async log(payload: LogPayload): Promise<void> {
     try {

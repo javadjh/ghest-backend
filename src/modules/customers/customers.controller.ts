@@ -13,15 +13,15 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto } from './dto/customer.dto';
-import { CreateCustomerCommand } from './commands/create-customer.command';
-import { UpdateCustomerCommand } from './commands/update-customer.command';
-import { DeleteCustomerCommand } from './commands/delete-customer.command';
-import { ListCustomersQuery } from './queries/list-customers.query';
-import { GetCustomerByIdQuery } from './queries/get-customer-by-id.query';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto } from '@/modules/customers/dto/customer.dto';
+import { CreateCustomerCommand } from '@/modules/customers/commands/create-customer.command';
+import { UpdateCustomerCommand } from '@/modules/customers/commands/update-customer.command';
+import { DeleteCustomerCommand } from '@/modules/customers/commands/delete-customer.command';
+import { ListCustomersQuery } from '@/modules/customers/queries/list-customers.query';
+import { GetCustomerByIdQuery } from '@/modules/customers/queries/get-customer-by-id.query';
 
 @ApiTags('مشتریان')
 @ApiAuth()

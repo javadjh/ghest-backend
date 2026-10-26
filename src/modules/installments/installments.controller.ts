@@ -12,15 +12,15 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { ListInstallmentsDto, UpdateInstallmentDto, InstallmentResponseDto } from './dto/installment.dto';
-import { ListInstallmentsQuery } from './queries/list-installments.query';
-import { GetInstallmentsBySaleQuery } from './queries/get-installments-by-sale.query';
-import { GetInstallmentByIdQuery } from './queries/get-installment-by-id.query';
-import { UpdateInstallmentCommand } from './commands/update-installment.command';
-import { InstallmentsService } from './installments.service';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { ListInstallmentsDto, UpdateInstallmentDto, InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
+import { ListInstallmentsQuery } from '@/modules/installments/queries/list-installments.query';
+import { GetInstallmentsBySaleQuery } from '@/modules/installments/queries/get-installments-by-sale.query';
+import { GetInstallmentByIdQuery } from '@/modules/installments/queries/get-installment-by-id.query';
+import { UpdateInstallmentCommand } from '@/modules/installments/commands/update-installment.command';
+import { InstallmentsService } from '@/modules/installments/installments.service';
 
 @ApiTags('اقساط')
 @ApiAuth()

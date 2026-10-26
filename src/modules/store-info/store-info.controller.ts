@@ -2,14 +2,14 @@ import { Body, Controller, Get, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../users/schemas/user.schema';
-import { UpdateStoreInfoDto, StoreInfoResponseDto } from './dto/store-info.dto';
-import { GetStoreInfoQuery } from './queries/get-store-info.query';
-import { UpdateStoreInfoCommand } from './commands/update-store-info.command';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/modules/users/schemas/user.schema';
+import { UpdateStoreInfoDto, StoreInfoResponseDto } from '@/modules/store-info/dto/store-info.dto';
+import { GetStoreInfoQuery } from '@/modules/store-info/queries/get-store-info.query';
+import { UpdateStoreInfoCommand } from '@/modules/store-info/commands/update-store-info.command';
 
 @ApiTags('اطلاعات فروشگاه')
 @ApiAuth()

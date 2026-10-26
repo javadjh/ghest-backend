@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { GetStoreInfoQuery } from './get-store-info.query';
-import { StoreInfoService } from '../store-info.service';
-import { StoreInfoResponseDto } from '../dto/store-info.dto';
+import { GetStoreInfoQuery } from '@/modules/store-info/queries/get-store-info.query';
+import { StoreInfoService } from '@/modules/store-info/store-info.service';
+import { StoreInfoResponseDto } from '@/modules/store-info/dto/store-info.dto';
 
 @QueryHandler(GetStoreInfoQuery)
 export class GetStoreInfoHandler implements IQueryHandler<GetStoreInfoQuery, StoreInfoResponseDto> {

@@ -2,9 +2,9 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Sale, SaleDocument, SaleStatus } from '../../sales/schemas/sale.schema';
-import { PhoneProfitChartItem } from '../../dashboard/dto/dashboard.dto';
-import { GetPhoneProfitChartQuery } from './get-phone-profit-chart.query';
+import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import { PhoneProfitChartItem } from '@/modules/dashboard/dto/dashboard.dto';
+import { GetPhoneProfitChartQuery } from '@/modules/dashboard/queries/get-phone-profit-chart.query';
 
 @QueryHandler(GetPhoneProfitChartQuery)
 export class GetPhoneProfitChartHandler implements IQueryHandler<GetPhoneProfitChartQuery, PhoneProfitChartItem[]> {

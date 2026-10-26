@@ -1,13 +1,13 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { GetDashboardStatsQuery } from './queries/get-dashboard-stats.query';
-import { GetMonthlyProfitChartQuery } from './queries/get-monthly-profit-chart.query';
-import { GetSalesStatusChartQuery } from './queries/get-sales-status-chart.query';
-import { GetPhoneProfitChartQuery } from './queries/get-phone-profit-chart.query';
-import { GetTopDebtCustomersQuery } from './queries/get-top-debt-customers.query';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { GetDashboardStatsQuery } from '@/modules/dashboard/queries/get-dashboard-stats.query';
+import { GetMonthlyProfitChartQuery } from '@/modules/dashboard/queries/get-monthly-profit-chart.query';
+import { GetSalesStatusChartQuery } from '@/modules/dashboard/queries/get-sales-status-chart.query';
+import { GetPhoneProfitChartQuery } from '@/modules/dashboard/queries/get-phone-profit-chart.query';
+import { GetTopDebtCustomersQuery } from '@/modules/dashboard/queries/get-top-debt-customers.query';
 
 @ApiTags('داشبورد')
 @ApiAuth()

@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetUserByIdQuery } from './get-user-by-id.query';
-import { UsersService } from '../users.service';
-import { UserResponseDto } from '../dto/user-response.dto';
+import { GetUserByIdQuery } from '@/modules/users/queries/get-user-by-id.query';
+import { UsersService } from '@/modules/users/users.service';
+import { UserResponseDto } from '@/modules/users/dto/user-response.dto';
 
 @QueryHandler(GetUserByIdQuery)
 export class GetUserByIdHandler implements IQueryHandler<GetUserByIdQuery, UserResponseDto> {

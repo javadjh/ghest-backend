@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CqrsModule } from '@nestjs/cqrs';
-import { Sale, SaleSchema } from './schemas/sale.schema';
-import { Installment, InstallmentSchema } from '../installments/schemas/installment.schema';
-import { Customer, CustomerSchema } from '../customers/schemas/customer.schema';
-import { SalesService } from './sales.service';
-import { SalesController } from './sales.controller';
-import { CreateSaleHandler } from './commands/create-sale.handler';
-import { UpdateSaleHandler } from './commands/update-sale.handler';
-import { DeleteSaleHandler } from './commands/delete-sale.handler';
-import { ListSalesHandler } from './queries/list-sales.handler';
-import { GetSaleByIdHandler } from './queries/get-sale-by-id.handler';
-import { LogsModule } from '../logs/logs.module';
+import { Sale, SaleSchema } from '@/modules/sales/schemas/sale.schema';
+import { Installment, InstallmentSchema } from '@/modules/installments/schemas/installment.schema';
+import { Customer, CustomerSchema } from '@/modules/customers/schemas/customer.schema';
+import { SalesService } from '@/modules/sales/sales.service';
+import { SalesController } from '@/modules/sales/sales.controller';
+import { CreateSaleHandler } from '@/modules/sales/commands/create-sale.handler';
+import { UpdateSaleHandler } from '@/modules/sales/commands/update-sale.handler';
+import { DeleteSaleHandler } from '@/modules/sales/commands/delete-sale.handler';
+import { ListSalesHandler } from '@/modules/sales/queries/list-sales.handler';
+import { GetSaleByIdHandler } from '@/modules/sales/queries/get-sale-by-id.handler';
+import { LogsModule } from '@/modules/logs/logs.module';
 
 @Module({
   imports: [

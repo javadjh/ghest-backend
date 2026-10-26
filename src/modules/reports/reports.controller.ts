@@ -1,14 +1,14 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { GetProfitReportQuery } from './queries/get-profit-report.query';
-import { GetMonthlyInstallmentsQuery } from './queries/get-monthly-installments.query';
-import { GetCustomerDebtReportQuery } from './queries/get-customer-debt-report.query';
-import { GetOverdueInstallmentsReportQuery } from './queries/get-overdue-installments-report.query';
-import { GetRealizedProfitPerSaleQuery } from './queries/get-realized-profit-per-sale.query';
-import { PersianDate } from '../../common/utils/persian-date';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { GetProfitReportQuery } from '@/modules/reports/queries/get-profit-report.query';
+import { GetMonthlyInstallmentsQuery } from '@/modules/reports/queries/get-monthly-installments.query';
+import { GetCustomerDebtReportQuery } from '@/modules/reports/queries/get-customer-debt-report.query';
+import { GetOverdueInstallmentsReportQuery } from '@/modules/reports/queries/get-overdue-installments-report.query';
+import { GetRealizedProfitPerSaleQuery } from '@/modules/reports/queries/get-realized-profit-per-sale.query';
+import { PersianDate } from '@/common/utils/persian-date';
 
 @ApiTags('گزارش‌ها')
 @ApiAuth()

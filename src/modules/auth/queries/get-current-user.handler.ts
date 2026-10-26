@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetCurrentUserQuery } from './get-current-user.query';
-import { UsersService } from '../../users/users.service';
-import { CurrentUserResponseDto } from '../dto/login-response.dto';
+import { GetCurrentUserQuery } from '@/modules/auth/queries/get-current-user.query';
+import { UsersService } from '@/modules/users/users.service';
+import { CurrentUserResponseDto } from '@/modules/auth/dto/login-response.dto';
 
 @QueryHandler(GetCurrentUserQuery)
 export class GetCurrentUserHandler

@@ -4,11 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
-import { UsersModule } from './modules/users/users.module';
-import { UsersService } from './modules/users/users.service';
-import { UserRole } from './modules/users/schemas/user.schema';
-import { LoggerModule } from './common/utils/logger.module';
-import { Log, LogSchema } from './modules/logs/schemas/log.schema';
+import { UsersModule } from '@/modules/users/users.module';
+import { UsersService } from '@/modules/users/users.service';
+import { UserRole } from '@/modules/users/schemas/user.schema';
+import { LoggerModule } from '@/common/utils/logger.module';
+import { Log, LogSchema } from '@/modules/logs/schemas/log.schema';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { Log, LogSchema } from './modules/logs/schemas/log.schema';
       inject: [ConfigService],
     }),
     MongooseModule.forRoot(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/installment_db',
+      'mongodb://127.0.0.1:27017/installment_db',
     ),
     MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }]),
     LoggerModule,

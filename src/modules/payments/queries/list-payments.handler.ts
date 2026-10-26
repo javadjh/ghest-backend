@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { ListPaymentsQuery } from './list-payments.query';
-import { PaymentsService } from '../payments.service';
-import { PaymentResponseDto } from '../dto/payment.dto';
+import { ListPaymentsQuery } from '@/modules/payments/queries/list-payments.query';
+import { PaymentsService } from '@/modules/payments/payments.service';
+import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
 
 @QueryHandler(ListPaymentsQuery)
 export class ListPaymentsHandler implements IQueryHandler<ListPaymentsQuery, { items: PaymentResponseDto[]; total: number; page: number; limit: number }> {

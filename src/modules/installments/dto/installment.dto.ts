@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, IsNumber, Min } from 'class-validator';
-import { InstallmentStatus } from '../schemas/installment.schema';
+import { InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
 
 export class InstallmentResponseDto {
   id: string;

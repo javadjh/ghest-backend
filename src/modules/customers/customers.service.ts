@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Customer, CustomerDocument } from './schemas/customer.schema';
-import { CreateCustomerDto, UpdateCustomerDto } from './dto/customer.dto';
+import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
+import { CreateCustomerDto, UpdateCustomerDto } from '@/modules/customers/dto/customer.dto';
 
 @Injectable()
 export class CustomersService {

@@ -2,13 +2,13 @@ import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { GenerateInvoiceQuery } from './queries/generate-invoice.query';
-import { InvoiceType } from './dto/invoice.dto';
-import { AppLoggerService } from '../../common/utils/app-logger.service';
-import { LogAction } from '../logs/schemas/log.schema';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { GenerateInvoiceQuery } from '@/modules/invoices/queries/generate-invoice.query';
+import { InvoiceType } from '@/modules/invoices/dto/invoice.dto';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
 
 @ApiTags('فاکتور')
 @ApiAuth()

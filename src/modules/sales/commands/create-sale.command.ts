@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
-import { CreateSaleDto } from '../dto/sale.dto';
+import { CreateSaleDto } from '@/modules/sales/dto/sale.dto';
 
 export class CreateSaleCommand implements ICommand {
   constructor(

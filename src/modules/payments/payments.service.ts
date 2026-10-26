@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Payment, PaymentDocument } from './schemas/payment.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '../installments/schemas/installment.schema';
-import { Sale, SaleDocument, SaleStatus } from '../sales/schemas/sale.schema';
-import { CreatePaymentDto } from './dto/payment.dto';
-import { FilesService } from '../files/files.service';
-import { PersianDate } from '../../common/utils/persian-date';
+import { Payment, PaymentDocument } from '@/modules/payments/schemas/payment.schema';
+import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import { CreatePaymentDto } from '@/modules/payments/dto/payment.dto';
+import { FilesService } from '@/modules/files/files.service';
+import { PersianDate } from '@/common/utils/persian-date';
 
 @Injectable()
 export class PaymentsService {

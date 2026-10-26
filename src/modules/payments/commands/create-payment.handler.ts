@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { CreatePaymentCommand } from './create-payment.command';
-import { PaymentsService } from '../payments.service';
-import { AppLoggerService } from '../../../common/utils/app-logger.service';
-import { LogAction } from '../../logs/schemas/log.schema';
-import { PaymentResponseDto } from '../dto/payment.dto';
+import { CreatePaymentCommand } from '@/modules/payments/commands/create-payment.command';
+import { PaymentsService } from '@/modules/payments/payments.service';
+import { AppLoggerService } from '@/common/utils/app-logger.service';
+import { LogAction } from '@/modules/logs/schemas/log.schema';
+import { PaymentResponseDto } from '@/modules/payments/dto/payment.dto';
 
 @CommandHandler(CreatePaymentCommand)
 export class CreatePaymentHandler implements ICommandHandler<CreatePaymentCommand, PaymentResponseDto> {

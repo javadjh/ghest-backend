@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Sale, SaleDocument, SaleStatus } from './schemas/sale.schema';
-import { Installment, InstallmentDocument, InstallmentStatus } from '../installments/schemas/installment.schema';
-import { Customer, CustomerDocument } from '../customers/schemas/customer.schema';
-import { CreateSaleDto, UpdateSaleDto } from './dto/sale.dto';
-import { calculateSale } from './helpers/sale-calculator';
-import { PersianDate } from '../../common/utils/persian-date';
+import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
+import { CreateSaleDto, UpdateSaleDto } from '@/modules/sales/dto/sale.dto';
+import { calculateSale } from '@/modules/sales/helpers/sale-calculator';
+import { PersianDate } from '@/common/utils/persian-date';
 
 @Injectable()
 export class SalesService {

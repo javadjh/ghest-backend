@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { PersianDate } from '../../common/utils/persian-date';
-import { Installment, InstallmentDocument, InstallmentStatus } from './schemas/installment.schema';
-import { UpdateInstallmentDto } from './dto/installment.dto';
-import { SalesService } from '../sales/sales.service';
+import { PersianDate } from '@/common/utils/persian-date';
+import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { UpdateInstallmentDto } from '@/modules/installments/dto/installment.dto';
+import { SalesService } from '@/modules/sales/sales.service';
 
 @Injectable()
 export class InstallmentsService {

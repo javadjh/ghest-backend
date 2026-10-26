@@ -2,12 +2,12 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { PersianDate } from '../../../common/utils/persian-date';
-import { Installment, InstallmentDocument, InstallmentStatus } from '../../installments/schemas/installment.schema';
-import { Sale, SaleDocument, SaleStatus } from '../../sales/schemas/sale.schema';
-import { Customer, CustomerDocument } from '../../customers/schemas/customer.schema';
-import { GetCustomerDebtReportQuery } from './get-customer-debt-report.query';
-import { CustomerDebtDto } from '../dto/report.dto';
+import { PersianDate } from '@/common/utils/persian-date';
+import { Installment, InstallmentDocument, InstallmentStatus } from '@/modules/installments/schemas/installment.schema';
+import { Sale, SaleDocument, SaleStatus } from '@/modules/sales/schemas/sale.schema';
+import { Customer, CustomerDocument } from '@/modules/customers/schemas/customer.schema';
+import { GetCustomerDebtReportQuery } from '@/modules/reports/queries/get-customer-debt-report.query';
+import { CustomerDebtDto } from '@/modules/reports/dto/report.dto';
 
 @QueryHandler(GetCustomerDebtReportQuery)
 export class GetCustomerDebtReportHandler implements IQueryHandler<GetCustomerDebtReportQuery, CustomerDebtDto[]> {

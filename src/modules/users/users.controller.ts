@@ -15,23 +15,23 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { ApiOkResponse } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { UserRole } from './schemas/user.schema';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { UserRole } from '@/modules/users/schemas/user.schema';
 import {
   CreateUserDto,
   UpdateUserDto,
   ChangePasswordDto,
-} from './dto/user.dto';
-import { UserResponseDto, PaginatedUsersDto } from './dto/user-response.dto';
-import { CreateUserCommand } from './commands/create-user.command';
-import { UpdateUserCommand } from './commands/update-user.command';
-import { DeleteUserCommand } from './commands/delete-user.command';
-import { ResetPasswordCommand } from './commands/reset-password.command';
-import { ListUsersQuery } from './queries/list-users.query';
-import { GetUserByIdQuery } from './queries/get-user-by-id.query';
+} from '@/modules/users/dto/user.dto';
+import { UserResponseDto, PaginatedUsersDto } from '@/modules/users/dto/user-response.dto';
+import { CreateUserCommand } from '@/modules/users/commands/create-user.command';
+import { UpdateUserCommand } from '@/modules/users/commands/update-user.command';
+import { DeleteUserCommand } from '@/modules/users/commands/delete-user.command';
+import { ResetPasswordCommand } from '@/modules/users/commands/reset-password.command';
+import { ListUsersQuery } from '@/modules/users/queries/list-users.query';
+import { GetUserByIdQuery } from '@/modules/users/queries/get-user-by-id.query';
 
 @ApiTags('کاربران')
 @ApiAuth()

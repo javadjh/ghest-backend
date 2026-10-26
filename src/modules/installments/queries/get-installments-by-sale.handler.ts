@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetInstallmentsBySaleQuery } from './get-installments-by-sale.query';
-import { InstallmentsService } from '../installments.service';
-import { InstallmentResponseDto } from '../dto/installment.dto';
+import { GetInstallmentsBySaleQuery } from '@/modules/installments/queries/get-installments-by-sale.query';
+import { InstallmentsService } from '@/modules/installments/installments.service';
+import { InstallmentResponseDto } from '@/modules/installments/dto/installment.dto';
 
 @QueryHandler(GetInstallmentsBySaleQuery)
 export class GetInstallmentsBySaleHandler implements IQueryHandler<GetInstallmentsBySaleQuery, InstallmentResponseDto[]> {

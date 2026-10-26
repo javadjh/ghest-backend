@@ -13,10 +13,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ApiAuth } from '../../common/decorators/api-auth.decorator';
-import { FilesService } from './files.service';
-import { FileResponseDto } from './dto/file.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { ApiAuth } from '@/common/decorators/api-auth.decorator';
+import { FilesService } from '@/modules/files/files.service';
+import { FileResponseDto } from '@/modules/files/dto/file.dto';
 
 @ApiTags('فایل‌ها')
 @ApiAuth()

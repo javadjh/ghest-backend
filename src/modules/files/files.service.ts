@@ -4,7 +4,7 @@ import { Model, Types } from 'mongoose';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { ConfigService } from '@nestjs/config';
-import { File, FileDocument } from './schemas/file.schema';
+import { File, FileDocument } from '@/modules/files/schemas/file.schema';
 
 @Injectable()
 export class FilesService {

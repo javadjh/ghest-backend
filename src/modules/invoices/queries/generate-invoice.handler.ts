@@ -2,12 +2,12 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Sale, SaleDocument } from '../../sales/schemas/sale.schema';
-import { Installment, InstallmentDocument } from '../../installments/schemas/installment.schema';
-import { StoreInfo, StoreInfoDocument } from '../../store-info/schemas/store-info.schema';
-import { PersianDate } from '../../../common/utils/persian-date';
-import { GenerateInvoiceQuery } from './generate-invoice.query';
-import { InvoiceType, InvoiceResponseDto } from '../dto/invoice.dto';
+import { Sale, SaleDocument } from '@/modules/sales/schemas/sale.schema';
+import { Installment, InstallmentDocument } from '@/modules/installments/schemas/installment.schema';
+import { StoreInfo, StoreInfoDocument } from '@/modules/store-info/schemas/store-info.schema';
+import { PersianDate } from '@/common/utils/persian-date';
+import { GenerateInvoiceQuery } from '@/modules/invoices/queries/generate-invoice.query';
+import { InvoiceType, InvoiceResponseDto } from '@/modules/invoices/dto/invoice.dto';
 
 @QueryHandler(GenerateInvoiceQuery)
 export class GenerateInvoiceHandler implements IQueryHandler<GenerateInvoiceQuery, InvoiceResponseDto> {

@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs = require('dayjs');
 import * as jalaliday from 'jalaliday';
 import 'dayjs/locale/fa';
 

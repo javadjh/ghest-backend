@@ -22,7 +22,7 @@ import { Log, LogSchema } from './modules/logs/schemas/log.schema';
       inject: [ConfigService],
     }),
     MongooseModule.forRoot(
-      'mongodb://127.0.0.1:27017/installment_db',
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/installment_db',
     ),
     MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }]),
     LoggerModule,

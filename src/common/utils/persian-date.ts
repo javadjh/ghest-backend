@@ -1,11 +1,9 @@
 import dayjs from 'dayjs';
-// @ts-ignore
 import jalaliday from 'jalaliday';
 import 'dayjs/locale/fa';
 
 // Extend dayjs with jalali calendar plugin
-dayjs.extend(jalaliday as any);
-dayjs.calendar('jalali');
+dayjs.extend(jalaliday);
 dayjs.locale('fa');
 
 const persianMonths = [
@@ -24,8 +22,8 @@ const persianMonths = [
 ];
 
 function makeJalali(jalali: string) {
-  const d = dayjs(jalali, { jalali: true }).calendar('jalali');
-  return d;
+  // استفاده از فرمت صحیح jalaliday برای پارس کردن تاریخ جلالی
+  return dayjs(jalali).calendar('jalali');
 }
 
 export class PersianDate {
@@ -33,24 +31,21 @@ export class PersianDate {
    * Convert Gregorian Date to Persian (Jalali) string 'YYYY/MM/DD'
    */
   static toJalali(date: Date | string | number): string {
-    const d = dayjs(date).calendar('jalali');
-    return d.format('YYYY/MM/DD');
+    return dayjs(date).calendar('jalali').format('YYYY/MM/DD');
   }
 
   /**
    * Convert Jalali string 'YYYY/MM/DD' to Gregorian Date
    */
   static toGregorian(jalali: string): Date {
-    const d = dayjs(jalali, { jalali: true }).calendar('jalali');
-    return d.toDate();
+    return dayjs(jalali).calendar('jalali').toDate();
   }
 
   /**
    * Format date with Persian month name
    */
   static formatJalali(date: Date | string | number): string {
-    const d = dayjs(date).calendar('jalali');
-    return d.format('D MMMM YYYY');
+    return dayjs(date).calendar('jalali').format('D MMMM YYYY');
   }
 
   /**
@@ -71,9 +66,7 @@ export class PersianDate {
    * Add N months to a Jalali date, returns Jalali string
    */
   static addMonths(jalali: string, months: number): string {
-    const d = dayjs(jalali, { jalali: true })
-      .calendar('jalali')
-      .add(months, 'month');
+    const d = dayjs(jalali).calendar('jalali').add(months, 'month');
     return d.format('YYYY/MM/DD');
   }
 
@@ -134,8 +127,8 @@ export class PersianDate {
    * Days difference between two Jalali dates
    */
   static daysBetween(start: string, end: string): number {
-    const d1 = dayjs(start, { jalali: true }).calendar('jalali');
-    const d2 = dayjs(end, { jalali: true }).calendar('jalali');
+    const d1 = dayjs(start).calendar('jalali');
+    const d2 = dayjs(end).calendar('jalali');
     return d2.diff(d1, 'day');
   }
 
@@ -144,5 +137,12 @@ export class PersianDate {
    */
   static todayDay(): number {
     return Number(dayjs().calendar('jalali').format('D'));
+  }
+}
+
+// تعریف Types جهت رفع خطای کامپایلر TypeScript برای متد calendar در dayjs
+declare module 'dayjs' {
+  interface Dayjs {
+    calendar(calendar?: string): any;
   }
 }

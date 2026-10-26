@@ -1,9 +1,11 @@
 import dayjs = require('dayjs');
-import * as jalaliday from 'jalaliday';
+import 'dayjs/locale/fa'; // @ts-ignore
+import jalaliday from 'jalaliday';
 import 'dayjs/locale/fa';
 
 // Extend dayjs with jalali calendar plugin
 dayjs.extend(jalaliday as any);
+// dayjs.calendar('jalali');
 dayjs.locale('fa');
 
 const persianMonths = [
@@ -22,7 +24,8 @@ const persianMonths = [
 ];
 
 function makeJalali(jalali: string) {
-  return dayjs(jalali).calendar('jalali');
+  const d = dayjs(jalali).calendar('jalali');
+  return d;
 }
 
 export class PersianDate {
@@ -30,21 +33,24 @@ export class PersianDate {
    * Convert Gregorian Date to Persian (Jalali) string 'YYYY/MM/DD'
    */
   static toJalali(date: Date | string | number): string {
-    return dayjs(date).calendar('jalali').format('YYYY/MM/DD');
+    const d = dayjs(date).calendar('jalali');
+    return d.format('YYYY/MM/DD');
   }
 
   /**
    * Convert Jalali string 'YYYY/MM/DD' to Gregorian Date
    */
   static toGregorian(jalali: string): Date {
-    return dayjs(jalali).calendar('jalali').toDate();
+    const d = dayjs(jalali).calendar('jalali');
+    return d.toDate();
   }
 
   /**
    * Format date with Persian month name
    */
   static formatJalali(date: Date | string | number): string {
-    return dayjs(date).calendar('jalali').format('D MMMM YYYY');
+    const d = dayjs(date).calendar('jalali');
+    return d.format('D MMMM YYYY');
   }
 
   /**
@@ -136,12 +142,5 @@ export class PersianDate {
    */
   static todayDay(): number {
     return Number(dayjs().calendar('jalali').format('D'));
-  }
-}
-
-// تعریف Types جهت رفع خطای کامپایلر TypeScript برای متد calendar در dayjs
-declare module 'dayjs' {
-  interface Dayjs {
-    calendar(calendarType?: 'jalali' | 'gregory'): any;
   }
 }

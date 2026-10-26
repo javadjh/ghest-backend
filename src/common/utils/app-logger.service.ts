@@ -1,4 +1,4 @@
-import { Log, LogAction } from "@/modules/logs/schemas/log.schema";
+import { Log, LogAction } from "../../modules/logs/schemas/log.schema";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";

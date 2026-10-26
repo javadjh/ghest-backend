@@ -1,12 +1,4 @@
-import dayjs from 'dayjs';
-// @ts-ignore
-import jalaliday from 'jalaliday';
-import 'dayjs/locale/fa';
-
-// بارگذاری پلاگین jalaliday
-const jalaliPlugin = (jalaliday as any)?.default || jalaliday;
-(dayjs as any).extend(jalaliPlugin);
-(dayjs as any).locale('fa');
+import * as jalaali from 'jalaali-js';
 
 const persianMonths = [
   'فروردین',
@@ -23,56 +15,88 @@ const persianMonths = [
   'اسفند',
 ];
 
-// هلپر ایجاد اینستنس با تقویم جلالی برای جلوگیری از خطای overload تایپ‌اسکریپت
-function makeJalali(dateInput?: any) {
-  if (typeof dateInput === 'string' && /^\d{4}[\/\-]/.test(dateInput)) {
-    // پارس تاریخ رشته‌ای جلالی
-    return (dayjs as any)(dateInput, { jalali: true }).calendar('jalali');
-  }
-  return (dayjs as any)(dateInput).calendar('jalali');
-}
-
 export class PersianDate {
   /**
-   * تبدیل تاریخ میلادی به رشته جلالی 'YYYY/MM/DD'
+   * تبدیل تاریخ میلادی/رشته/تایم‌استمپ به رشته جلالی 'YYYY/MM/DD'
    */
-  static toJalali(date: Date | string | number): string {
-    return (dayjs as any)(date).calendar('jalali').format('YYYY/MM/DD');
+  static toJalali(date: Date | string | number = new Date()): string {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const j = jalaali.toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    return `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
   }
 
   /**
    * تبدیل رشته جلالی 'YYYY/MM/DD' به شیء Date میلادی
    */
-  static toGregorian(jalali: string): Date {
-    return makeJalali(jalali).toDate();
+  static toGregorian(jalaliStr: string): Date {
+    const parts = jalaliStr.split(/[\/\-]/);
+    if (parts.length < 3) return new Date();
+    const jy = parseInt(parts[0], 10);
+    const jm = parseInt(parts[1], 10);
+    const jd = parseInt(parts[2], 10);
+    const g = jalaali.toGregorian(jy, jm, jd);
+    return new Date(g.gy, g.gm - 1, g.gd);
   }
 
   /**
-   * فرمت تاریخ جلالی با نام ماه فارسی (مثلاً ۲۵ مهر ۱۴۰۳)
+   * فرمت تاریخ با نام ماه فارسی (مثلاً ۲۵ مهر ۱۴۰۳)
    */
   static formatJalali(date: Date | string | number): string {
-    return (dayjs as any)(date).calendar('jalali').format('D MMMM YYYY');
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const j = jalaali.toJalaali(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    const monthName = persianMonths[j.jm - 1] || '';
+    return `${j.jd} ${monthName} ${j.jy}`;
   }
 
   /**
    * دریافت تاریخ جلالی امروز 'YYYY/MM/DD'
    */
   static now(): string {
-    return (dayjs as any)().calendar('jalali').format('YYYY/MM/DD');
+    return this.toJalali(new Date());
   }
 
   /**
    * تایم‌استمپ کامل جلالی فعلی 'YYYY/MM/DD HH:mm:ss'
    */
   static nowTimestamp(): string {
-    return (dayjs as any)().calendar('jalali').format('YYYY/MM/DD HH:mm:ss');
+    const now = new Date();
+    const datePart = this.toJalali(now);
+    const timePart = [
+      String(now.getHours()).padStart(2, '0'),
+      String(now.getMinutes()).padStart(2, '0'),
+      String(now.getSeconds()).padStart(2, '0'),
+    ].join(':');
+    return `${datePart} ${timePart}`;
   }
 
   /**
-   * افزودن N ماه به یک تاریخ جلالی
+   * افزودن N ماه به یک تاریخ جلالی، بازگشت رشته جلالی
    */
-  static addMonths(jalali: string, months: number): string {
-    return makeJalali(jalali).add(months, 'month').format('YYYY/MM/DD');
+  static addMonths(jalaliStr: string, months: number): string {
+    const parts = jalaliStr.split(/[\/\-]/);
+    if (parts.length < 3) return jalaliStr;
+    let jy = parseInt(parts[0], 10);
+    let jm = parseInt(parts[1], 10) + months;
+    let jd = parseInt(parts[2], 10);
+
+    while (jm > 12) {
+      jm -= 12;
+      jy += 1;
+    }
+    while (jm < 1) {
+      jm += 12;
+      jy -= 1;
+    }
+
+    // بررسی تعداد روزهای ماه مقصد برای جلوگیری ازOverflow (مثلا ۳۱ اسفند در سال غیرکبیسه)
+    const daysInMonth = jalaali.jalaaliMonthLength(jy, jm);
+    if (jd > daysInMonth) {
+      jd = daysInMonth;
+    }
+
+    return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`;
   }
 
   /**
@@ -83,64 +107,67 @@ export class PersianDate {
   }
 
   /**
-   * نام ماه فارسی بر اساس یک رشته تاریخ جلالی
+   * نام ماه فارسی از روی رشته تاریخ جلالی
    */
-  static monthNameFromDate(jalali: string): string {
-    const m = this.monthNumberFromDate(jalali);
+  static monthNameFromDate(jalaliStr: string): string {
+    const m = this.monthNumberFromDate(jalaliStr);
     return persianMonths[m - 1] || '';
   }
 
   /**
-   * شماره ماه جلالی (1 تا 12)
+   * شماره ماه جلالی (1 تا 12) از روی تاریخ
    */
-  static monthNumberFromDate(jalali: string): number {
-    const d = makeJalali(jalali);
-    return Number(d.format('M'));
+  static monthNumberFromDate(jalaliStr: string): number {
+    const parts = jalaliStr.split(/[\/\-]/);
+    return parts.length >= 2 ? parseInt(parts[1], 10) : 1;
   }
 
   /**
-   * سال جلالی (مثلاً 1403)
+   * سال جلالی از روی تاریخ
    */
-  static yearFromDate(jalali: string): number {
-    const d = makeJalali(jalali);
-    return Number(d.format('YYYY'));
+  static yearFromDate(jalaliStr: string): number {
+    const parts = jalaliStr.split(/[\/\-]/);
+    return parts.length >= 1 ? parseInt(parts[0], 10) : 1403;
   }
 
   /**
    * کلید ماه برای گروه‌بندی 'YYYY/MM'
    */
-  static monthKey(jalali: string): string {
-    const d = makeJalali(jalali);
-    return d.format('YYYY/MM');
+  static monthKey(jalaliStr: string): string {
+    const parts = jalaliStr.split(/[\/\-]/);
+    if (parts.length < 2) return '';
+    return `${parts[0]}/${parts[1]}`;
   }
 
   /**
    * برچسب ماه و سال برای نمایش (مثلاً "مهر ۱۴۰۳")
    */
-  static monthLabel(jalali: string): string {
-    return `${this.monthNameFromDate(jalali)} ${this.yearFromDate(jalali)}`;
+  static monthLabel(jalaliStr: string): string {
+    return `${this.monthNameFromDate(jalaliStr)} ${this.yearFromDate(jalaliStr)}`;
   }
 
   /**
    * کلید ماه جاری 'YYYY/MM'
    */
   static currentMonthKey(): string {
-    return (dayjs as any)().calendar('jalali').format('YYYY/MM');
+    return this.monthKey(this.now());
   }
 
   /**
    * اختلاف روزها بین دو تاریخ جلالی
    */
   static daysBetween(start: string, end: string): number {
-    const d1 = makeJalali(start);
-    const d2 = makeJalali(end);
-    return d2.diff(d1, 'day');
+    const d1 = this.toGregorian(start);
+    const d2 = this.toGregorian(end);
+    const diffTime = d2.getTime() - d1.getTime();
+    return Math.round(diffTime / (1000 * 60 * 60 * 24));
   }
 
   /**
    * شماره روز امروز در ماه شمسی (1 تا 31)
    */
   static todayDay(): number {
-    return Number((dayjs as any)().calendar('jalali').format('D'));
+    const parts = this.now().split('/');
+    return parts.length >= 3 ? parseInt(parts[2], 10) : 1;
   }
 }
